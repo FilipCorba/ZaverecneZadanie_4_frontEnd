@@ -2,13 +2,25 @@
   <v-container fluid>
     <v-layout>
       <Navbar />
-      <router-view />
+      <v-main>
+        <RouterView />
+      </v-main>
     </v-layout>
   </v-container>
 </template>
 
 <script setup>
 import Navbar from "@components/Navbar.vue"; // Adjust the path as needed
+</script>
+
+<script>
+import { defineComponent } from "vue";
+
+export default defineComponent({
+  components: {
+    Navbar,
+  },
+});
 </script>
 
 <style scoped>

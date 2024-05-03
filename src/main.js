@@ -20,6 +20,9 @@ const vuetify = createVuetify({
   icons: {
     defaultSet: "mdi",
   },
+  theme: {
+    defaultTheme: "light",
+  },
 });
 
 app.use(store);

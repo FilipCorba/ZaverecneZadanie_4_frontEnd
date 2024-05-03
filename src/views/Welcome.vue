@@ -9,7 +9,7 @@
         </div>
         <v-form>
           <v-row align="center" justify="center">
-            <v-col cols="4" sm="4">
+            <v-col :cols="isSmallScreen ? 6 : 12" sm="6">
               <v-text-field
                 class="outlined-text-field"
                 color="deep-orange-darken-2"
@@ -19,9 +19,19 @@
                 maxlength="5"
               ></v-text-field>
             </v-col>
-            <v-col cols="4" sm="4" class="text-center">
+            <v-col :cols="isSmallScreen ? 4 : 12" sm="4" class="text-center">
+              <v-btn
+                color="deep-orange-darken-2"
+                @click="connect"
+                class="mx-4 my-2"
+                >{{ $store.getters.currentTranslations.connect_btn }}</v-btn
+              >
+            </v-col>
+          </v-row>
+          <v-row align="center" justify="center">
+            <v-col :cols="isSmallScreen ? 4 : 12" sm="12" class="text-center">
               <v-btn color="deep-orange-darken-2" @click="connect">{{
-                $store.getters.currentTranslations.connect_btn
+                $store.getters.currentTranslations.generate_btn
               }}</v-btn>
             </v-col>
           </v-row>
@@ -34,13 +44,16 @@
 <script setup>
 import { ref } from "vue";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const store = useStore();
 
 const connectionCode = ref("");
 
 const connect = () => {
-  console.log(connectionCode.value);
+  router.push({ path: "/question-generator" });
 };
 </script>
 
