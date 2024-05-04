@@ -119,9 +119,22 @@
             </v-list-item>
           </v-list>
         </v-card>
-        <v-btn color="deep-orange-darken-2" variant="outlined" class="my-4" @click="submitQuiz">
+        <v-btn
+          color="deep-orange-darken-2"
+          variant="outlined"
+          class="my-4"
+          @click="submitQuiz"
+        >
           Submit Quiz
         </v-btn>
+
+        <!-- Image -->
+        <v-img
+          :src="image_path"
+          alt="Image description"
+          width="300px"
+          height="auto"
+        ></v-img>
       </v-col>
     </v-row>
   </v-container>
@@ -130,17 +143,13 @@
 <script setup>
 import { ref } from "vue";
 import { useStore } from "vuex";
+import { postQrCode } from "@api/qr_code";
 
 const store = useStore();
-
-// Initial question list
 const questions = ref([]);
-
-// New question input
 const newQuestion = ref("");
-
-// Reference to the questions list card
 const questionsListRef = ref(null);
+const image_path = ref("");
 
 // Add a new question
 const addQuestion = () => {
@@ -182,8 +191,10 @@ const toggleIsCorrect = (answer) => {
   answer.isCorrect = !answer.isCorrect;
 };
 
-const submitQuiz = () => {
-  console.log(questions.value);
+const submitQuiz = async () => {
+  const result = await postQrCode("asdasdsad");
+  console.log(result);
+  image_path.value = result.image;
 };
 </script>
 

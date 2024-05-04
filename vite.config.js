@@ -10,6 +10,8 @@ export default defineConfig({
       "@views": path.resolve(__dirname, "./src/views"),
       "@components": path.resolve(__dirname, "./src/components"),
       "@language": path.resolve(__dirname, "./src/language"),
+      "@apiManger": path.resolve(__dirname, "./src/api/api_manager.js"),
+      "@api": path.resolve(__dirname, "./src/api"),
     },
   },
 });
