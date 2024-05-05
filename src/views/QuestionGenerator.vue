@@ -192,9 +192,26 @@ const toggleIsCorrect = (answer) => {
 };
 
 const submitQuiz = async () => {
-  const result = await postQrCode("asdasdsad");
-  console.log(result);
-  image_path.value = result.image;
+  const quizData = {
+    questions: questions.value.map((question, index) => ({
+      question_id: index + 1,
+      question: question.question,
+      isOpenAnswer: question.isOpenAnswer,
+      answers: question.answers.map((answer) => ({
+        ...(question.isOpenAnswer ? {} : { label: answer.label }),
+        ...(question.isOpenAnswer ? {} : { value: answer.value }),
+        isCorrect: answer.isCorrect,
+      })),
+    })),
+  };
+
+  try {
+    const result = await postQrCode(quizData);
+    console.log(result);
+    image_path.value = result.image;
+  } catch (error) {
+    console.error("Error submitting quiz:", error);
+  }
 };
 </script>
 
