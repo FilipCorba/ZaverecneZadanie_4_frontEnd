@@ -205,6 +205,8 @@ const submitQuiz = async () => {
     })),
   };
 
+  console.log(quizData);
+
   try {
     const result = await postQrCode(quizData);
     console.log(result);
