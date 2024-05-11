@@ -6,21 +6,17 @@
         :label="$store.getters.currentTranslations.name"
         v-model="name"
         :outlined="nameError"
-        :error-messages="
-          nameError ? [nameErrorText] : []
-        "
+        :error-messages="nameError ? [nameErrorText] : []"
         variant="solo"
-         @input="resetErrorMessages('name')"
+        @input="resetErrorMessages('name')"
       ></v-text-field>
       <v-text-field
         :label="$store.getters.currentTranslations.email"
         v-model="email"
         :outlined="emailError"
-        :error-messages="
-          emailError ? [ emailErrorText] : []
-        "
+        :error-messages="emailError ? [emailErrorText] : []"
         variant="solo"
-         @input="resetErrorMessages('email')"
+        @input="resetErrorMessages('email')"
       ></v-text-field>
       <v-text-field
         class="rounded-s"
@@ -95,16 +91,16 @@ const toggleConfirmPasswordVisibility = () => {
 
 const resetErrorMessages = (field) => {
   switch (field) {
-    case 'name':
+    case "name":
       nameError.value = false;
       break;
-    case 'email':
+    case "email":
       emailError.value = false;
       break;
-    case 'password':
+    case "password":
       passwordError.value = false;
       break;
-    case 'confirmPassword':
+    case "confirmPassword":
       confirmPasswordError.value = false;
       break;
     default:
@@ -121,10 +117,8 @@ const submitRegistration = async () => {
 
   passwordMismatch.value = false;
 
-
-
   let hasError = false;
-  
+
   if (name.value.trim().length < 3) {
     nameError.value = true;
     nameErrorText.value = store.getters.currentTranslations.name_error;
@@ -137,8 +131,7 @@ const submitRegistration = async () => {
     emailError.value = true;
     emailErrorText.value = store.getters.currentTranslations.email_error;
     hasError = true;
-  }
-  else if (!emailPattern.test(email.value.trim())) {
+  } else if (!emailPattern.test(email.value.trim())) {
     emailError.value = true;
     emailErrorText.value = store.getters.currentTranslations.email_invalid;
     hasError = true;
@@ -179,7 +172,7 @@ const submitRegistration = async () => {
 
   // Proceed with registration
   const userData = {
-    name: name.value,
+    username: name.value,
     email: email.value,
     password: password.value,
   };
@@ -192,7 +185,6 @@ const submitRegistration = async () => {
   }
 };
 </script>
-
 
 <style scoped>
 .registration-card {
