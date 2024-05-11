@@ -24,4 +24,22 @@ export default {
   incorrect: "Incorrect answer",
   openAnswer: "Open answer",
   singleChoice: "Single choice",
+  title_place_holder: "Title",
+  description_place_holder: "Description",
+
+  //Auth
+  register: "Register here",
+  login: "Login here",
+  dont_have_account: "Don't have an account?",
+  already_have_account: "Already have an account?",
+  name: "Name",
+  name_error: "Name is required",
+  email: "Email",
+  email_error: "Email is required",
+  email_invalid: "Email must be in this format example@mail.com",
+  password: "Password",
+  password_error: "Password is required",
+  password_invalid:
+    "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number!",
+  password_confirmation: "Confirm password",
 };

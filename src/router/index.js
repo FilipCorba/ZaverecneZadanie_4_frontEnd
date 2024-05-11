@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Dashboard from "@views/Welcome.vue";
 import Survey from "@views/SurveyLook.vue";
 import QuestionGenerator from "@views/QuestionGenerator.vue";
+import Auth from "@views/Auth.vue";
 
 const routes = [
   {
@@ -14,21 +15,25 @@ const routes = [
     name: "Welcome",
     component: Dashboard,
     meta: { requiresAuth: false },
-
   },
   {
-    path: '/survey',
-    name: 'Survey',
+    path: "/survey",
+    name: "Survey",
     component: Survey,
     meta: { requiresAuth: false },
   },
   {
-    path: '/question-generator',
-    name: 'QuestionGenerator',
+    path: "/question-generator",
+    name: "QuestionGenerator",
     component: QuestionGenerator,
     meta: { requiresAuth: false },
   },
-  
+  {
+    path: "/login",
+    name: "Login",
+    component: Auth,
+    meta: { requiresAuth: false },
+  },
 ];
 
 const router = createRouter({

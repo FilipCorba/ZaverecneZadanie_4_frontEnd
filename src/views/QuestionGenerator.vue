@@ -11,7 +11,33 @@
       </v-col>
     </v-row>
 
-    <!-- Question Form -->
+    <!-- Title and Description -->
+    <v-row justify="center">
+      <v-col cols="12" sm="8" md="6">
+      <v-text-field
+        v-model="title"
+        :label="$store.getters.currentTranslations.title_label"
+        color="deep-orange-darken-2"
+        dense
+        required
+        style=" overflow: hidden; text-overflow: ellipsis"
+        :placeholder="$store.getters.currentTranslations.title_place_holder"
+        variant="underlined"
+      ></v-text-field>
+      <v-text-field
+        v-model="description"
+        :label="$store.getters.currentTranslations.description_label"
+        color="deep-orange-darken-2"
+        dense
+        required
+        style=" overflow: hidden; text-overflow: ellipsis"
+        :placeholder="
+        $store.getters.currentTranslations.description_place_holder
+        "
+        variant="underlined"
+      ></v-text-field>
+      </v-col>
+    </v-row>
     <v-row justify="center">
       <v-col cols="12" sm="8" md="6">
         <v-form @submit.prevent="addQuestion">
@@ -22,7 +48,7 @@
             color="deep-orange-darken-2"
             dense
             required
-            style="color: black; overflow: hidden; text-overflow: ellipsis"
+            style=" overflow: hidden; text-overflow: ellipsis"
             :placeholder="
               $store.getters.currentTranslations.question_place_holder
             "
@@ -150,6 +176,8 @@ const questions = ref([]);
 const newQuestion = ref("");
 const questionsListRef = ref(null);
 const image_path = ref("");
+const title = ref("");
+const description = ref("");
 
 // Add a new question
 const addQuestion = () => {
@@ -193,6 +221,8 @@ const toggleIsCorrect = (answer) => {
 
 const submitQuiz = async () => {
   const quizData = {
+    title: title.value,
+    description: description.value,
     questions: questions.value.map((question, index) => ({
       question_id: index + 1,
       question: question.question,

@@ -24,4 +24,25 @@ export default {
   incorrect: "Nesprávna odpoveď",
   openAnswer: "Odpoveď",
   singleChoice: "Jedno možnostné",
+  title_place_holder: "Titulok",
+  description_place_holder: "Popis",
+
+  //Auth
+  register: "Registrovať sa tu",
+  login: "Prihlásiť sa tu",
+  dont_have_account: "Nemáte účet?",
+  already_have_account: "Už máte účet?",
+  name: "Meno",
+  name_error: "Meno je povinné",
+  email: "Email",
+  email_error: "Email je povinný",
+  email_invalid: "Email musí byť v tomto formáte example@mail.sk",
+  password: "Heslo",
+  password_error: "Heslo je povinné",
+  password_invalid:
+    "Heslo musí mať aspoň 8 znakov a obsahovať aspoň jedno veľké písmeno, jedno malé písmeno, jedno číslo!",
+  password_confirmation: "Potvrď heslo",
+
+
+
 };
