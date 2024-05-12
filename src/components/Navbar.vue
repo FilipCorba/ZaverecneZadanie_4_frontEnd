@@ -30,7 +30,7 @@
       </v-avatar>
     </div>
 
-    <v-btn>{{ $store.getters.currentTranslations.sign_in }}</v-btn>
+    <v-btn @click="goToLogin">{{ $store.getters.currentTranslations.sign_in }}</v-btn>
 
     <v-btn id="menu-activator" icon> <v-icon>mdi-dots-vertical</v-icon> </v-btn
     ><v-menu activator="#menu-activator">
@@ -46,13 +46,19 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 
 const store = useStore();
+const router = useRouter();
 const selectedLanguage = ref(store.getters.currentLanguage);
 
 const changeLanguage = (language) => {
   selectedLanguage.value = language;
   store.commit("changeLanguage", language);
+};
+
+const goToLogin = () => {
+  router.push('/login');
 };
 
 const items = computed(() => [
