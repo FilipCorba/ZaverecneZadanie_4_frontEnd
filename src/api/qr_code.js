@@ -18,11 +18,13 @@ export async function getQrCode(qrCodeId) {
   }
 }
 
-export async function postQrCode(data) {
+
+
+export async function generateQR(participation_id) {
   try {
-    const response = await apiManager.post(`/api/v1/quiz.php/generate-qr`, {
-      data: data,
-    });
+    const response = await apiManager.get(
+      `/api/v1/quiz.php/generate-qr?participation-id=${participation_id}`
+    );
     if (response.status === 200) {
       return response.data;
     } else {

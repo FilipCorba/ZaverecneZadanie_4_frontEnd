@@ -6,6 +6,8 @@ export default {
   walk_through: "Walk through",
   contact: "Contact us",
   settings: "Settings",
+  logout: "Logout",
+  profile: "Profile",
 
   //Welcome
   phrase: "Quickly Gather, Analyze and Act",
@@ -42,4 +44,12 @@ export default {
   password_invalid:
     "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number!",
   password_confirmation: "Confirm password",
+  password_mismatch: "Passwords do not match",
+
+  //Profile
+  old_password: "Old password",
+  new_password: "New password",
+  new_password_confirmation: "Confirm new password",
+  impersonated: "Impersonated",
+  not_impersonated: "Not impersonated",
 };

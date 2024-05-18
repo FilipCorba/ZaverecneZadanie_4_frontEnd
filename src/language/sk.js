@@ -6,6 +6,8 @@ export default {
   walk_through: "Prejsť",
   contact: "Kontaktujte nás",
   settings: "Nastavenia",
+  logout: "Odhlásiť sa",
+  profile: "Profil",
 
   //Welcome
   phrase: "Rýchlo Zhromažďuj, Analyzuj a Konaj",
@@ -42,7 +44,13 @@ export default {
   password_invalid:
     "Heslo musí mať aspoň 8 znakov a obsahovať aspoň jedno veľké písmeno, jedno malé písmeno, jedno číslo!",
   password_confirmation: "Potvrď heslo",
+  password_mismatch: "Heslá sa nezhodujú",
 
 
-
+  //Profile
+  old_password: "Staré heslo",
+  new_password: "Nové heslo",
+  new_password_confirmation: "Potvrď nové heslo",
+  impersonated: "Branný ako tento užívateľ",
+  not_impersonated: "Nie je branný ako tento užívateľ",
 };

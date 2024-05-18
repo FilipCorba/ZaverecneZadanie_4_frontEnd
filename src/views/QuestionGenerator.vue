@@ -149,7 +149,7 @@
           color="deep-orange-darken-2"
           variant="outlined"
           class="my-4"
-          @click="submitQuiz"
+          @click="submitQuiz()"
         >
           Submit Quiz
         </v-btn>
@@ -169,7 +169,7 @@
 <script setup>
 import { ref } from "vue";
 import { useStore } from "vuex";
-import { postQrCode } from "@api/qr_code";
+import { postQuiz } from "@api/quizzes";
 
 const store = useStore();
 const questions = ref([]);
@@ -222,12 +222,13 @@ const toggleIsCorrect = (answer) => {
 const submitQuiz = async () => {
   const quizData = {
     title: title.value,
+    user_id: localStorage.getItem("user_id"),
     description: description.value,
     questions: questions.value.map((question, index) => ({
       question_id: index + 1,
       question: question.question,
       isOpenAnswer: question.isOpenAnswer,
-      answers: question.answers.map((answer) => ({
+      options: question.answers.map((answer) => ({
         ...(question.isOpenAnswer ? {} : { label: answer.label }),
         ...(question.isOpenAnswer ? {} : { value: answer.value }),
         isCorrect: answer.isCorrect,
@@ -238,7 +239,7 @@ const submitQuiz = async () => {
   console.log(quizData);
 
   try {
-    const result = await postQrCode(quizData);
+    const result = await postQuiz(quizData);
     console.log(result);
     image_path.value = result.image;
   } catch (error) {

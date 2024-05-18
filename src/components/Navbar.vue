@@ -30,12 +30,19 @@
       </v-avatar>
     </div>
 
-    <v-btn @click="goToLogin">{{ $store.getters.currentTranslations.sign_in }}</v-btn>
+    <v-btn v-if="!isAuthenticated" @click="goToLogin">{{
+      $store.getters.currentTranslations.sign_in
+    }}</v-btn>
 
     <v-btn id="menu-activator" icon> <v-icon>mdi-dots-vertical</v-icon> </v-btn
     ><v-menu activator="#menu-activator">
       <v-list>
-        <v-list-item v-for="(item, index) in items" :key="index" :value="index">
+        <v-list-item
+          v-for="(item, index) in items"
+          :key="index"
+          :value="index"
+          @click="handleMenuItemClick(item)"
+        >
           <v-list-item-title>{{ item.title }}</v-list-item-title>
         </v-list-item>
       </v-list>
@@ -51,6 +58,7 @@ import { useRouter } from "vue-router";
 const store = useStore();
 const router = useRouter();
 const selectedLanguage = ref(store.getters.currentLanguage);
+const isAuthenticated = computed(() => store.getters.isAuthenticated);
 
 const changeLanguage = (language) => {
   selectedLanguage.value = language;
@@ -58,14 +66,29 @@ const changeLanguage = (language) => {
 };
 
 const goToLogin = () => {
-  router.push('/login');
+  router.push("/login");
 };
 
 const items = computed(() => [
   { title: store.getters.currentTranslations.walk_through },
   { title: store.getters.currentTranslations.contact },
   { title: store.getters.currentTranslations.settings },
+  { title: store.getters.currentTranslations.logout },
+  { title: store.getters.currentTranslations.profile },
 ]);
+
+const handleMenuItemClick = (item) => {
+  if (item.title === store.getters.currentTranslations.logout) {
+    logout();a
+  } else if (item.title === store.getters.currentTranslations.profile) {
+    router.push("/profile");
+  }
+};
+
+const logout = () => {
+  store.commit("removeToken");
+  router.push("/logout");
+};
 </script>
 
 <style scoped>
