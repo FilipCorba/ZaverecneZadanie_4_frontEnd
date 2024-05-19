@@ -8,6 +8,7 @@ import Profile from "@views/Profile.vue";
 import Quiz from "@views/Quiz.vue";
 import ActiveVote from "@views/ActiveVote.vue";
 import WordCloud from "@views/WordCloud.vue";
+import Statistics from "@views/Statistics.vue";
 
 const routes = [
   {
@@ -52,6 +53,12 @@ const routes = [
     meta: { requiresAuth: false },
   },
   {
+    path: "/statistics",
+    name: "Statistics",
+    component: Statistics,
+    meta: { requiresAuth: false },
+  },
+  {
     path: "/word-cloud",
     name: "WordCloud",
     component: WordCloud,
@@ -74,7 +81,6 @@ const routes = [
     name: "Logout",
     component: Auth,
   },
-
 ];
 
 const router = createRouter({

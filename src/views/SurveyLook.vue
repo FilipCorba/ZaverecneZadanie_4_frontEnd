@@ -2,6 +2,13 @@
   <v-container v-if="queryParam" fluid style="color: #e64a19">
     <v-row justify="center">
       <v-col cols="12" sm="8" md="6">
+        <!-- Quiz Title -->
+        <v-row justify="center">
+          <v-col cols="12">
+            <h1 class="quiz-title">{{ quizName }}</h1>
+          </v-col>
+        </v-row>
+
         <v-carousel
           elevation="10"
           progress="deep-orange-darken-2"
@@ -40,7 +47,13 @@
                             : null
                         "
                         ripple
-                        @click="selectOption(index, option.value)"
+                        @click="
+                          selectOption(
+                            index,
+                            option.value,
+                            question.is_multiple
+                          )
+                        "
                       >
                         <v-card-text class="option-content">
                           <div class="option-text">{{ option.text }}</div>
@@ -63,13 +76,9 @@
                   <v-row justify="center" class="open-text-container" v-else>
                     <v-col cols="12">
                       <v-textarea
-                        label="Three rows"
-                        row-height="25"
-                        rows="3"
-                        variant="outlined"
-                        auto-grow
-                        shaped
                         v-model="selectedOptions[index]"
+                        variant="outlined"
+                        color="deep-orange-darken-2"
                         :label="question.question"
                         :class="{ 'deep-orange-border': true }"
                       ></v-textarea>
@@ -99,27 +108,61 @@ import { ref, onMounted, computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter, useRoute } from "vue-router";
 import { getSurveyQuiz } from "@api/quizzes";
+import { sendVote } from "@api/vote";
 
 const store = useStore();
 const router = useRouter();
 const route = useRoute();
-
+const participation_id = ref(null);
 const selectedOptions = ref({});
 const questions = ref([]);
+const quizName = ref("");
 
-const connect = () => {
-  console.log("Connect button clicked", selectedOptions.value);
+const connect = async () => {
+  const questionsData = questions.value.map((question, index) => {
+    const answers = Array.isArray(selectedOptions.value[index])
+      ? selectedOptions.value[index].map((value) => {
+          const option = question.options.find((opt) => opt.value === value);
+          return { answer_text: option ? option.text : value };
+        })
+      : [{ answer_text: selectedOptions.value[index] }];
+
+    return {
+      question_id: question.question_id,
+      answers,
+    };
+  });
+
+  const result = {
+    participation_id: participation_id.value,
+    questions: questionsData,
+  };
+  console.log("Submitting vote:", result);
+
+  const response = await sendVote(result);
+  if (response) {
+    router.push({
+      path: "/statistics",
+      query: { participation_id: participation_id.value },
+    });
+  } else {
+    console.error("Error submitting vote");
+  }
 };
 
-const selectOption = (questionIndex, value) => {
+const selectOption = (questionIndex, value, isMultiple) => {
   if (!selectedOptions.value[questionIndex]) {
     selectedOptions.value[questionIndex] = [];
   }
-  const index = selectedOptions.value[questionIndex].indexOf(value);
-  if (index > -1) {
-    selectedOptions.value[questionIndex].splice(index, 1);
+  if (isMultiple) {
+    const index = selectedOptions.value[questionIndex].indexOf(value);
+    if (index > -1) {
+      selectedOptions.value[questionIndex].splice(index, 1);
+    } else {
+      selectedOptions.value[questionIndex].push(value);
+    }
   } else {
-    selectedOptions.value[questionIndex].push(value);
+    selectedOptions.value[questionIndex] = [value];
   }
 };
 
@@ -140,10 +183,16 @@ const getSurvey = async () => {
   const result = await getSurveyQuiz(queryParam.value);
   console.log(result);
 
-  if (result.length > 0) {
-    questions.value = result.map((survey) => ({
+  console.log("Survey data:", result.participation_id);
+
+  if (result.survey.length > 0) {
+    participation_id.value = result.participation_id;
+    quizName.value = result.quiz_name; // Set the quiz name
+    questions.value = result.survey.map((survey) => ({
+      question_id: survey.question_id,
       question: survey.question,
       quiz_type: survey.quiz_type,
+      is_multiple: survey.is_multiple,
       options: survey.options.map((opt, index) => ({
         text: opt,
         value: `option${index + 1}`,
@@ -172,6 +221,12 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.quiz-title {
+  text-align: center;
+  color: #e64a19;
+  margin-bottom: 20px;
+}
+
 .question-card {
   border: 2px solid #e64a19;
   border-radius: 10px;
