@@ -51,6 +51,10 @@
           Password and confirm password do not match
         </v-alert>
 
+        <v-alert v-if="registrationError" type="error" outlined dismissible>
+          {{ registrationErrorText }}
+        </v-alert>
+
         <v-btn color="deep-orange-darken-2" @click="submitRegistration"
           >Register</v-btn
         >
@@ -61,10 +65,12 @@
 
 <script setup>
 import { ref } from "vue";
-import { registerUser } from "@api/auth";
+import { registerUser, loginUser } from "@api/auth";
+import { useRouter } from "vue-router";
 import { useStore } from "vuex"; // Import useStore from Vuex
 
 const store = useStore();
+const router = useRouter();
 
 const name = ref("");
 const email = ref("");
@@ -80,6 +86,8 @@ const passwordMismatch = ref(false);
 const passwordErrorText = ref("");
 const emailErrorText = ref("");
 const nameErrorText = ref("");
+const registrationError = ref(false);
+const registrationErrorText = ref("");
 
 const togglePasswordVisibility = () => {
   passwordVisible.value = !passwordVisible.value;
@@ -178,8 +186,41 @@ const submitRegistration = async () => {
   };
 
   try {
-    const result = await registerUser(userData);
-    console.log(result); // Handle the response as needed
+    const response = await registerUser(userData);
+    if (response == false) {
+      registrationError.value = true;
+      registrationErrorText.value = "Invalid username or password";
+      setTimeout(() => {
+        registrationError.value = false;
+      }, 5000); // 5000 milliseconds = 5 seconds
+      return;
+    } else {
+      //Registration successful
+      const dataLogin= {
+        username: userData.username,
+        password: userData.password
+      }
+      const responseLogin = await loginUser(dataLogin);//username,password
+
+      if (responseLogin == false) {
+        /*loginError.value = true;
+    loginErrorText.value = "Invalid username or password";
+    setTimeout(() => {
+      loginError.value = false;
+    }, 5000); // 5000 milliseconds = 5 seconds*/
+        console.log("Login error");
+        return;
+      } else {
+        console.log(responseLogin);
+
+        const token = responseLogin.token;
+        localStorage.setItem("token", token);
+        localStorage.setItem("user_id", responseLogin.user.id);
+        localStorage.setItem("checkup_id", responseLogin.user.id);
+        store.commit("setToken", token);
+        router.push({ path: "/dashboard" });
+      }
+    }
   } catch (error) {
     console.error(error); // Handle any errors
   }
