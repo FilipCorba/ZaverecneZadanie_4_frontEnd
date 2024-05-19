@@ -1,9 +1,15 @@
 <template>
-  <v-app-bar color="deep-orange-darken-2">
+  <layout>
+    <v-app-bar color="deep-orange-darken-2">
     <template v-slot:image> </template>
 
     <template v-slot:prepend>
-      <v-app-bar-nav-icon></v-app-bar-nav-icon>
+      <!--<v-app-bar-nav-icon></v-app-bar-nav-icon>-->
+      <v-app-bar-nav-icon
+          
+          @click.stop="drawer = !drawer"
+        ></v-app-bar-nav-icon>
+ 
       <v-app-bar-title>{{
         $store.getters.currentTranslations.welcome
       }}</v-app-bar-title>
@@ -11,9 +17,9 @@
 
     <v-spacer></v-spacer>
 
-    <v-btn icon>
+    <!--<v-btn icon>
       <v-icon>mdi-magnify</v-icon>
-    </v-btn>
+    </v-btn>-->
 
     <div class="flags-wrapper">
       <v-avatar
@@ -34,8 +40,21 @@
       $store.getters.currentTranslations.sign_in
     }}</v-btn>
 
-    <v-btn id="menu-activator" icon> <v-icon>mdi-dots-vertical</v-icon> </v-btn
-    ><v-menu activator="#menu-activator">
+    <v-btn id="menu-activator" icon> <v-icon>mdi-dots-vertical</v-icon> </v-btn>
+
+    <v-navigation-drawer v-model="drawer" app temporary>
+      <v-list>
+        <v-list-item
+          v-for="(item, index) in items"
+          :key="index"
+          @click="handleMenuItemClick(item)"
+        >
+          <v-list-item-title>{{ item.title }}</v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
+    
+    <!--<v-menu activator="#menu-activator">
       <v-list>
         <v-list-item
           v-for="(item, index) in items"
@@ -46,12 +65,15 @@
           <v-list-item-title>{{ item.title }}</v-list-item-title>
         </v-list-item>
       </v-list>
-    </v-menu>
+    </v-menu>-->
+
   </v-app-bar>
+
+</layout>
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed } from "vue";//,watch
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 
@@ -59,6 +81,8 @@ const store = useStore();
 const router = useRouter();
 const selectedLanguage = ref(store.getters.currentLanguage);
 const isAuthenticated = computed(() => store.getters.isAuthenticated);
+const drawer = ref(false);
+
 
 const changeLanguage = (language) => {
   selectedLanguage.value = language;
@@ -79,7 +103,7 @@ const items = computed(() => [
 
 const handleMenuItemClick = (item) => {
   if (item.title === store.getters.currentTranslations.logout) {
-    logout();a
+    logout();
   } else if (item.title === store.getters.currentTranslations.profile) {
     router.push("/profile");
   }
