@@ -5,7 +5,7 @@ import sk from "@language/sk.js";
 export default createStore({
   state: {
     selectedLanguage: "en", // Default selected language
-    token: localStorage.getItem("token") || null, // Initialize token from localStorage
+    token: localStorage.getItem("token") , // Initialize token from localStorage
   },
   mutations: {
     changeLanguage(state, language) {

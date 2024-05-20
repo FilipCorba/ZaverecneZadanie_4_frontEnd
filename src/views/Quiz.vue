@@ -58,12 +58,39 @@
                       }}</span>
                     </v-btn>
                   </v-col>
+                  <!-- Button to delete an option -->
+                  <v-col cols="12" sm="6" md="2">
+                    <v-btn
+                      icon
+                      @click="removeOption(question, i)"
+                      color="red darken-2"
+                    >
+                      <v-icon>mdi-delete</v-icon>
+                    </v-btn>
+                  </v-col>
                 </v-row>
               </v-list-item-content>
+
               <v-list-item-action>
-                <v-btn icon @click="removeQuestion(index)" color="red darken-2">
-                  <v-icon>mdi-delete</v-icon>
-                </v-btn>
+                <v-row class="ml-4">
+                  <v-btn
+                    v-if="!question.open_question"
+                    icon
+                    @click="addOption(question)"
+                    color="green darken-2"
+                    class="my-2"
+                  >
+                    <v-icon>mdi-plus</v-icon>
+                  </v-btn>
+                  <v-btn
+                    icon
+                    @click="removeQuestion(index)"
+                    color="red darken-2"
+                    class="my-2"
+                  >
+                    <v-icon>mdi-delete</v-icon>
+                  </v-btn>
+                </v-row>
               </v-list-item-action>
             </v-list-item>
           </v-list>
@@ -80,47 +107,45 @@
           <v-subheader v-if="votingList.withEndTime.length">
             Voting List with End Time
           </v-subheader>
-          <v-list-item-group>
-            <v-list-item
-              v-for="(participation, index) in votingList.withEndTime"
-              :key="'withEnd_' + index"
-            >
-              <v-hover v-slot="{ isHovering, props }">
-                <v-card
-                  class="mx-auto"
-                  color="deep-orange-darken-2"
-                  variant="tonal"
-                  max-width="600"
-                  elevation="8"
-                  v-bind="props"
-                >
-                  <v-expand-transition>
-                    <div
-                      v-if="isHovering"
-                      class="d-flex transition-fast-in-fast-out bg-orange-darken-2 v-card--reveal text-h6"
-                      style="height: 100%"
-                    >
-                      Note: {{ participation.note }}
-                    </div>
-                  </v-expand-transition>
-                  <v-card-text>
-                    <div class="font-weight-light text-grey text-h6">
-                      Code: {{ participation.code }}
-                    </div>
-                    <div class="font-weight-light text-grey text-h6">
-                      Score: {{ participation.score }}
-                    </div>
-                  </v-card-text>
-                </v-card>
-                <v-list-item-content>
-                  <v-list-item-title>
-                    {{ participation.end_time }}
-                  </v-list-item-title>
-                </v-list-item-content>
-              </v-hover>
-            </v-list-item>
-          </v-list-item-group>
-
+          <div class="scrollable-list">
+            <v-list-item-group>
+              <v-list-item
+                v-for="(participation, index) in votingList.withEndTime"
+                :key="'withEnd_' + index"
+              >
+                <v-hover v-slot="{ isHovering, props }">
+                  <v-card
+                    class="mx-auto"
+                    color="deep-orange-darken-2"
+                    variant="tonal"
+                    max-width="600"
+                    elevation="8"
+                    v-bind="props"
+                  >
+                    <v-expand-transition>
+                      <div
+                        v-if="isHovering"
+                        class="d-flex transition-fast-in-fast-out bg-orange-darken-2 v-card--reveal text-h6"
+                        style="height: 100%"
+                      >
+                        Note: {{ participation.note }}
+                      </div>
+                    </v-expand-transition>
+                    <v-card-text>
+                      <div class="font-weight-light text-grey text-h6">
+                        Code: {{ participation.code }}
+                      </div>
+                    </v-card-text>
+                  </v-card>
+                  <v-list-item-content>
+                    <v-list-item-title>
+                      {{ participation.end_time }}
+                    </v-list-item-title>
+                  </v-list-item-content>
+                </v-hover>
+              </v-list-item>
+            </v-list-item-group>
+          </div>
           <!-- Divider between groups -->
           <v-divider
             v-if="
@@ -132,30 +157,59 @@
           <v-subheader v-if="votingList.withoutEndTime.length">
             Voting List without End Time
           </v-subheader>
-          <v-list-item-group>
-            <v-list-item
-              v-for="(participation, index) in votingList.withoutEndTime"
-              :key="'withoutEnd_' + index"
-            >
-              <v-card
-                class="mx-auto"
-                color="deep-orange-darken-2"
-                max-width="600"
-                variant="outlined"
-                elevation="8"
-                v-bind="props"
+          <div class="scrollable-list">
+            <v-list-item-group>
+              <v-list-item
+                v-for="(participation, index) in votingList.withoutEndTime"
+                :key="'withoutEnd_' + index"
               >
-                <v-card-text>
-                  <div class="font-weight-light text-grey text-h6">
-                    Code: {{ participation.code }}
-                  </div>
-                </v-card-text>
-              </v-card>
-              <v-list-item-content>
-                <v-list-item-title> No End Time </v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list-item-group>
+                <v-card
+                  class="mx-auto"
+                  color="deep-orange-darken-2"
+                  max-width="600"
+                  variant="outlined"
+                  elevation="8"
+                  v-bind="props"
+                >
+                  <v-card-text>
+                    <div class="font-weight-light text-grey text-h6">
+                      Code: {{ participation.code }}
+                    </div>
+                  </v-card-text>
+                </v-card>
+                <v-list-item-content>
+                  <v-list-item-title> No End Time </v-list-item-title>
+                </v-list-item-content>
+                <v-list-item-action>
+                  <v-btn
+                    icon
+                    @click="showDeactivationTextArea(participation)"
+                    color="red darken-2"
+                  >
+                    <v-icon>mdi-cancel</v-icon>
+                  </v-btn>
+                </v-list-item-action>
+                <v-list-item-action v-if="participation.showTextArea">
+                  <v-textarea
+                    v-model="participation.note"
+                    label="Deactivation Note"
+                  ></v-textarea>
+                  <v-btn
+                    color="green darken-2"
+                    @click="confirmDeactivation(participation)"
+                  >
+                    Confirm
+                  </v-btn>
+                  <v-btn
+                    color="red darken-2"
+                    @click="hideDeactivationTextArea(participation)"
+                  >
+                    Cancel
+                  </v-btn>
+                </v-list-item-action>
+              </v-list-item>
+            </v-list-item-group>
+          </div>
         </v-card>
       </v-col>
     </v-row>
@@ -172,7 +226,11 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { useRoute } from "vue-router";
-import { getQuizById, getVotingListOfQuizzes } from "@api/quizzes";
+import {
+  getQuizById,
+  getVotingListOfQuizzes,
+  deactivateSurveyById,
+} from "@api/quizzes";
 import { deleteQuestion } from "@api/questions";
 
 const route = useRoute();
@@ -211,6 +269,44 @@ const removeQuestion = async (index) => {
   }
 };
 
+const addOption = (question) => {
+  question.options.push({
+    option_text: "",
+    is_correct: false,
+  });
+};
+
+const removeOption = (question, index) => {
+  question.options.splice(index, 1);
+};
+
+const showDeactivationTextArea = (participation) => {
+  participation.showTextArea = true;
+};
+
+const hideDeactivationTextArea = (participation) => {
+  participation.showTextArea = false;
+};
+
+const confirmDeactivation = async (participation) => {
+  const data = {
+    note: participation.note,
+    participation_id: participation.participation_id,
+  };
+  try {
+    const result = await deactivateSurveyById(data);
+    if (result) {
+      participation.end_time = null;
+      participation.showTextArea = false;
+      await getVotingList();
+    } else {
+      console.error("Error deactivating survey");
+    }
+  } catch (error) {
+    console.error("Error deactivating survey:", error);
+  }
+};
+
 const getVotingList = async () => {
   try {
     console.log("Getting voting list for quiz:", quiz_id.value);
@@ -223,6 +319,7 @@ const getVotingList = async () => {
         } else {
           acc.withoutEndTime.push(curr);
         }
+        curr.showTextArea = false;
         return acc;
       },
       { withEndTime: [], withoutEndTime: [] }
@@ -232,6 +329,7 @@ const getVotingList = async () => {
     console.error("Error getting voting list:", error);
   }
 };
+
 const titleFontSize = computed(() => {
   // You can adjust the multiplier as needed
   // For example, to make the font size 5% of the viewport width:
@@ -246,6 +344,33 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.questions-list-card {
+  max-height: 400px; /* Adjust the height as needed */
+  overflow-y: auto;
+}
+
+.question-title {
+  font-size: smaller;
+  color: #888;
+  white-space: nowrap; /* Add this line to prevent text wrapping */
+}
+
+.v-btn__content {
+  color: white;
+}
+
+.v-card--reveal {
+  overflow: hidden;
+}
+
+.answer-btn {
+  width: 100%;
+}
+
+.answer-text {
+  font-size: 1rem;
+}
+
 .v-card--reveal {
   align-items: center;
   bottom: 0;
@@ -253,5 +378,10 @@ onMounted(() => {
   opacity: 0.9;
   position: absolute;
   width: 100%;
+}
+
+.scrollable-list {
+  max-height: 400px;
+  overflow-y: auto;
 }
 </style>

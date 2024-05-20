@@ -1,13 +1,18 @@
 // en.js
 export default {
   //Navbar
-  welcome: "Welcome",
+  welcome: "Welcome to",
+  home: "Home",
   sign_in: "Sign in",
   walk_through: "Walk through",
   contact: "Contact us",
   settings: "Settings",
   logout: "Logout",
   profile: "Profile",
+  dashboard: "Dashboard",
+  survey: "Survey",
+  generate_quiz: "Generate quiz",
+  title: "SURVIO",
 
   //Welcome
   phrase: "Quickly Gather, Analyze and Act",
@@ -52,4 +57,14 @@ export default {
   new_password_confirmation: "Confirm new password",
   impersonated: "Impersonated",
   not_impersonated: "Not impersonated",
+
+  //Dashboard
+  survey_title: "Survey title",
+  survey_description: "Survey description",
+  survey_status: "Survey status",
+  survey_status_active: "Active",
+  survey_status_inactive: "Inactive",
+  survey_created_at: "Created at",
+  survey_subject: "Survey subject",
+  survey_number_of_questions: "Number of questions",
 };

@@ -100,11 +100,33 @@
         </v-btn>
       </v-col>
     </v-row>
+    <v-dialog v-model="dialogVisible" max-width="500" persistent>
+      <v-card>
+        <v-card-title color="deep-orange-darken-2" class="headline"
+          >Wrong Code Entered</v-card-title
+        >
+        <v-card-text>
+          Please enter the correct code:
+          <v-text-field
+            v-model="newCode"
+            color="deep-orange-darken-2"
+            label="Code"
+            variant="outlined"
+          ></v-text-field>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="success" @click="submitNewCode">Submit</v-btn>
+          <v-btn color="deep-orange-darken-2" @click="backToMenu"
+            >Back to Menu</v-btn
+          >
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watch } from "vue";
 import { useStore } from "vuex";
 import { useRouter, useRoute } from "vue-router";
 import { getSurveyQuiz } from "@api/quizzes";
@@ -183,6 +205,11 @@ const getSurvey = async () => {
   const result = await getSurveyQuiz(queryParam.value);
   console.log(result);
 
+  if (!result) {
+    dialogVisible.value = true;
+    return;
+  }
+
   console.log("Survey data:", result.participation_id);
 
   if (result.survey.length > 0) {
@@ -202,6 +229,25 @@ const getSurvey = async () => {
   }
 };
 
+watch(
+  () => route.query.code,
+  (newCode) => {
+    fetchSurveyQuiz(newCode);
+  }
+);
+
+const dialogVisible = ref(false);
+const newCode = ref("");
+
+const submitNewCode = () => {
+  dialogVisible.value = false;
+  router.push({ path: "/survey", query: { code: newCode.value } });
+};
+const backToMenu = () => {
+  dialogVisible.value = false;
+  router.push({ path: "/menu" });
+};
+
 const allQuestionsAnswered = computed(() => {
   return (
     questions.value.length > 0 &&
@@ -213,7 +259,32 @@ const allQuestionsAnswered = computed(() => {
     )
   );
 });
+const fetchSurveyQuiz = async (code) => {
+  console.log("Getting survey quiz with query code " + code);
+  const result = await getSurveyQuiz(code);
+  console.log(result);
 
+  if (!result) {
+    dialogVisible.value = true;
+    return;
+  }
+
+  if (result.survey.length > 0) {
+    participation_id.value = result.participation_id;
+    quizName.value = result.quiz_name;
+    questions.value = result.survey.map((survey) => ({
+      question_id: survey.question_id,
+      question: survey.question,
+      quiz_type: survey.quiz_type,
+      is_multiple: survey.is_multiple,
+      options: survey.options.map((opt, index) => ({
+        text: opt,
+        value: `option${index + 1}`,
+      })),
+    }));
+    selectedOptions.value = {};
+  }
+};
 onMounted(() => {
   checkQueryParam();
   getSurvey();

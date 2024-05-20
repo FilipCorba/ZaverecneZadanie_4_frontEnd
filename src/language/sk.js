@@ -1,13 +1,19 @@
 // en.js
 export default {
   //Navbar
-  welcome: "Ahoj",
+  welcome: "Vitajte v",
+  home: "Domov",
   sign_in: "Prihlásiť sa",
   walk_through: "Prejsť",
   contact: "Kontaktujte nás",
   settings: "Nastavenia",
   logout: "Odhlásiť sa",
   profile: "Profil",
+  dashboard: "Dashboard",
+  survey: "Anketa",
+  generate_quiz: "Generovať kvíz",
+  title: "SURVIO",
+
 
   //Welcome
   phrase: "Rýchlo Zhromažďuj, Analyzuj a Konaj",
@@ -53,4 +59,15 @@ export default {
   new_password_confirmation: "Potvrď nové heslo",
   impersonated: "Branný ako tento užívateľ",
   not_impersonated: "Nie je branný ako tento užívateľ",
+
+  //Dashboard
+  survey_title: "Názov ankety",
+  survey_description: "Popis ankety",
+  survey_status: "Stav ankety",
+  survey_created_at: "Vytvorená dňa",
+  survey_status_active: "Aktívna",
+  survey_status_inactive: "Neaktívna",
+  survey_subject: "Predmet ankety",
+  survey_number_of_questions: "Počet otázok",
+
 };

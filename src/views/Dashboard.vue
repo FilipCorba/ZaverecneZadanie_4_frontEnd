@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { getListOfQuizzes, activateQuizById } from "@api/quizzes";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
@@ -7,19 +7,39 @@ import { useRouter } from "vue-router";
 const store = useStore();
 const router = useRouter();
 
-const headers = [
+const headers = computed(() => [
   {
     align: "center",
     key: "title",
     sortable: false,
-    title: "Quiz Title",
+    title: store.getters.currentTranslations.survey_title,
   },
-  { key: "description", align: "center", title: "Description" },
-  { key: "created_at", align: "center", title: "Created At" },
-  { key: "subject_name", align: "center", title: "Subject" },
-  { key: "number_of_questions", align: "center", title: "Number of Questions" },
-  { key: "is_active", align: "center", title: "Active" },
-];
+  {
+    key: "description",
+    align: "center",
+    title: store.getters.currentTranslations.survey_description,
+  },
+  {
+    key: "created_at",
+    align: "center",
+    title: store.getters.currentTranslations.survey_created_at,
+  },
+  {
+    key: "name",
+    align: "center",
+    title: store.getters.currentTranslations.survey_subject,
+  },
+  {
+    key: "number_of_questions",
+    align: "center",
+    title: store.getters.currentTranslations.survey_number_of_questions,
+  },
+  {
+    key: "is_active",
+    align: "center",
+    title: store.getters.currentTranslations.survey_status_active,
+  },
+]);
 
 // Define a reactive variable to hold the fetched quizzes
 const quizzes = ref([]);
@@ -72,16 +92,24 @@ onMounted(() => {
               <td>{{ item.title }}</td>
               <td>{{ item.description }}</td>
               <td>{{ item.created_at }}</td>
-              <td>{{ item.subject_name }}</td>
+              <td>{{ item.name }}</td>
               <td>{{ item.number_of_questions }}</td>
               <td>
                 <!-- Conditional rendering for active status -->
                 <v-icon :color="item.is_active ? 'green' : 'red'">
-                  {{ item.is_active ? 'mdi-checkbox-marked-circle' : 'mdi-checkbox-blank-circle-outline' }}
+                  {{
+                    item.is_active
+                      ? "mdi-checkbox-marked-circle"
+                      : "mdi-checkbox-blank-circle-outline"
+                  }}
                 </v-icon>
               </td>
               <td>
-                <v-btn variant=" outlined" color="deep-orange-darken-2" @click.stop="activateQuiz(item)">
+                <v-btn
+                  variant=" outlined"
+                  color="deep-orange-darken-2"
+                  @click.stop="activateQuiz(item)"
+                >
                   Activate Quiz
                 </v-btn>
               </td>
@@ -92,7 +120,6 @@ onMounted(() => {
     </v-layout>
   </v-container>
 </template>
-
 
 <style scoped>
 .custom-data-table {

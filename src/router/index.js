@@ -53,6 +53,22 @@ const routes = [
     meta: { requiresAuth: false },
   },
   {
+    path: "/:code",
+    redirect: (to) => {
+      if (to.params.code.length === 5) {
+        return {
+          path: "/survey",
+          query: {
+            code: to.params.code,
+          },
+        };
+      } else {
+        return { path: "/" };
+      }
+    },
+    meta: { requiresAuth: false },
+  },
+  {
     path: "/statistics",
     name: "Statistics",
     component: Statistics,

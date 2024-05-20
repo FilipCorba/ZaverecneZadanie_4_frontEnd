@@ -14,28 +14,60 @@
     <!-- Title and Description -->
     <v-row justify="center">
       <v-col cols="12" sm="8" md="6">
-      <v-text-field
-        v-model="title"
-        :label="$store.getters.currentTranslations.title_label"
-        color="deep-orange-darken-2"
-        dense
-        required
-        style=" overflow: hidden; text-overflow: ellipsis"
-        :placeholder="$store.getters.currentTranslations.title_place_holder"
-        variant="underlined"
-      ></v-text-field>
-      <v-text-field
-        v-model="description"
-        :label="$store.getters.currentTranslations.description_label"
-        color="deep-orange-darken-2"
-        dense
-        required
-        style=" overflow: hidden; text-overflow: ellipsis"
-        :placeholder="
-        $store.getters.currentTranslations.description_place_holder
-        "
-        variant="underlined"
-      ></v-text-field>
+        <v-text-field
+          v-model="title"
+          :label="$store.getters.currentTranslations.title_label"
+          color="deep-orange-darken-2"
+          dense
+          required
+          style="overflow: hidden; text-overflow: ellipsis"
+          :placeholder="$store.getters.currentTranslations.title_place_holder"
+          variant="underlined"
+        ></v-text-field>
+        <v-text-field
+          v-model="description"
+          :label="$store.getters.currentTranslations.description_label"
+          color="deep-orange-darken-2"
+          dense
+          required
+          style="overflow: hidden; text-overflow: ellipsis"
+          :placeholder="
+            $store.getters.currentTranslations.description_place_holder
+          "
+          variant="underlined"
+        ></v-text-field>
+      </v-col>
+    </v-row>
+    <v-row justify="center">
+      <v-col cols="12" sm="8" md="6">
+        <v-select
+          v-model="selectedSubject"
+          :items="subjects"
+          item-text="name"
+          item-value="name"
+          label="Select or write your own option"
+          dense
+          outlined
+          color="deep-orange-darken-2"
+          style="margin-bottom: 16px"
+          @input="checkCustomOption"
+        >
+          <template #prepend-item>
+            <v-list-item>
+              <v-list-item-content>
+                <v-text-field
+                  v-model="customSubject"
+                  label="Custom Option"
+                  dense
+                  outlined
+                  color="deep-orange-darken-2"
+                  placeholder="Write your own option"
+                  @input="handleCustomOptionInput"
+                ></v-text-field>
+              </v-list-item-content>
+            </v-list-item>
+          </template>
+        </v-select>
       </v-col>
     </v-row>
     <v-row justify="center">
@@ -48,7 +80,7 @@
             color="deep-orange-darken-2"
             dense
             required
-            style=" overflow: hidden; text-overflow: ellipsis"
+            style="overflow: hidden; text-overflow: ellipsis"
             :placeholder="
               $store.getters.currentTranslations.question_place_holder
             "
@@ -167,17 +199,22 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useStore } from "vuex";
 import { postQuiz } from "@api/quizzes";
+import { getListOfSubjects } from "@api/subjects";
+import { useRouter } from "vue-router";
 
-const store = useStore();
+const route = useRouter();
 const questions = ref([]);
 const newQuestion = ref("");
 const questionsListRef = ref(null);
+const selectedSubject = ref(null);
+const customSubject = ref("");
 const image_path = ref("");
 const title = ref("");
 const description = ref("");
+let subjects = ref([]);
 
 // Add a new question
 const addQuestion = () => {
@@ -224,6 +261,7 @@ const submitQuiz = async () => {
     title: title.value,
     user_id: localStorage.getItem("user_id"),
     description: description.value,
+    subject: selectedSubject.value,
     questions: questions.value.map((question, index) => ({
       question_id: index + 1,
       question: question.question,
@@ -236,7 +274,7 @@ const submitQuiz = async () => {
     })),
   };
 
-  console.log(quizData);
+  route.push("/dashboard");
 
   try {
     const result = await postQuiz(quizData);
@@ -246,6 +284,32 @@ const submitQuiz = async () => {
     console.error("Error submitting quiz:", error);
   }
 };
+
+const getSubjects = async () => {
+  try {
+    const result = await getListOfSubjects();
+    subjects.value = result.map((subject) => subject.name); // Extract names from objects
+    console.log(subjects.value);
+  } catch (error) {
+    console.error("Error fetching subjects:", error);
+  }
+};
+
+const checkCustomOption = (value) => {
+  showCustomOption.value = value === "custom";
+};
+
+// Handle input in the custom option text field
+// Handle input in the custom option text field
+const handleCustomOptionInput = (event) => {
+  const value = event.target.value; // Retrieve the value from the event object
+  console.log("Custom option input:", value);
+  selectedSubject.value = value; // Update the selected subject with the custom value
+};
+
+onMounted(() => {
+  getSubjects();
+});
 </script>
 
 <style scoped>
