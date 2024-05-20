@@ -34,6 +34,7 @@ export default {
   singleChoice: "Jedno možnostné",
   title_place_holder: "Titulok",
   description_place_holder: "Popis",
+  subject_label: "Predmet",
 
   //Auth
   register: "Registrovať sa tu",

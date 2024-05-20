@@ -33,6 +33,8 @@ export default {
   singleChoice: "Single choice",
   title_place_holder: "Title",
   description_place_holder: "Description",
+  subject_label: "Subject",
+
 
   //Auth
   register: "Register here",

@@ -45,7 +45,7 @@
           :items="subjects"
           item-text="name"
           item-value="name"
-          label="Select or write your own option"
+          :label="$store.getters.currentTranslations.subject_label"
           dense
           outlined
           color="deep-orange-darken-2"

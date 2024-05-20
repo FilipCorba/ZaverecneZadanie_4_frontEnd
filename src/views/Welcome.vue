@@ -30,7 +30,7 @@
           </v-row>
           <v-row align="center" justify="center">
             <v-col :cols="isSmallScreen ? 4 : 12" sm="12" class="text-center">
-              <v-btn color="deep-orange-darken-2" @click="connect">{{
+              <v-btn color="deep-orange-darken-2" @click="generate">{{
                 $store.getters.currentTranslations.generate_btn
               }}</v-btn>
             </v-col>
@@ -53,6 +53,10 @@ const store = useStore();
 const connectionCode = ref("");
 
 const connect = () => {
+  router.push({ path: "/survey", query: { code: connectionCode.value } });
+};
+
+const generate = () => {
   router.push({ path: "/question-generator" });
 };
 </script>

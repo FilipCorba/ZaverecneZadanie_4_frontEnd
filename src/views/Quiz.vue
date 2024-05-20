@@ -20,13 +20,20 @@
                   class="question-title"
                   style="overflow: hidden; text-overflow: ellipsis"
                 >
-                  {{ question.question_text }}
+                  <v-text-field
+                    v-model="question.question_text"
+                    outlined
+                    dense
+                    label="Question Text"
+                    @input="markAsEdited(question)"
+                  ></v-text-field>
                 </v-list-item-title>
                 <v-row>
                   <v-col cols="6">
                     <v-switch
                       v-model="question.open_question"
                       label="Open Answer"
+                      @change="markAsEdited(question)"
                     ></v-switch>
                   </v-col>
                 </v-row>
@@ -41,6 +48,7 @@
                       v-model="option.option_text"
                       :label="'Option ' + (i + 1)"
                       variant="underlined"
+                      @input="markAsEdited(question)"
                     ></v-text-field>
                   </v-col>
 
@@ -50,7 +58,7 @@
                       :color="
                         option.is_correct ? 'green darken-2' : 'red darken-2'
                       "
-                      @click="toggleIsCorrect(option)"
+                      @click="toggleIsCorrect(option, question)"
                       class="answer-btn"
                     >
                       <span class="answer-text">{{
@@ -72,24 +80,39 @@
               </v-list-item-content>
 
               <v-list-item-action>
-                <v-row class="ml-4">
-                  <v-btn
-                    v-if="!question.open_question"
-                    icon
-                    @click="addOption(question)"
-                    color="green darken-2"
-                    class="my-2"
-                  >
-                    <v-icon>mdi-plus</v-icon>
-                  </v-btn>
-                  <v-btn
-                    icon
-                    @click="removeQuestion(index)"
-                    color="red darken-2"
-                    class="my-2"
-                  >
-                    <v-icon>mdi-delete</v-icon>
-                  </v-btn>
+                <v-row>
+                  <v-col cols="7">
+                    <v-btn
+                      v-if="!question.open_question"
+                      icon
+                      @click="addOption(question)"
+                      color="green darken-2"
+                      class="my-2"
+                    >
+                      <v-icon>mdi-plus</v-icon>
+                    </v-btn>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="3">
+                    <v-btn
+                      icon
+                      @click="removeQuestion(index)"
+                      color="red darken-2"
+                      class="my-2"
+                    >
+                      <v-icon>mdi-delete</v-icon>
+                    </v-btn>
+                  </v-col>
+                  <v-col cols="12" sm="6" md="2">
+                    <v-btn
+                      v-if="question.isEdited"
+                      @click="editQuestion(question)"
+                      color="deep-orange-darken-2"
+                      variant="outlined"
+                      class="my-2"
+                    >
+                      Edit
+                    </v-btn>
+                  </v-col>
                 </v-row>
               </v-list-item-action>
             </v-list-item>
@@ -231,7 +254,7 @@ import {
   getVotingListOfQuizzes,
   deactivateSurveyById,
 } from "@api/quizzes";
-import { deleteQuestion } from "@api/questions";
+import { deleteQuestion, updateQuestion } from "@api/questions"; // Ensure updateQuestion is available
 
 const route = useRoute();
 
@@ -245,21 +268,37 @@ const getQuiz = async () => {
     const response = await getQuizById(quiz_id.value);
     quiz.value = response;
     console.log("Fetched quiz:", quiz.value);
+
+    // Transform the questions object into an array and add question_id to each question
+    if (quiz.value.questions && typeof quiz.value.questions === "object") {
+      quiz.value.questions = Object.entries(quiz.value.questions).map(
+        ([key, question]) => {
+          question.question_id = key;
+          return question;
+        }
+      );
+    } else {
+      quiz.value.questions = [];
+    }
+
+    // Initialize isEdited property for each question
+    quiz.value.questions.forEach((question) => (question.isEdited = false));
+    console.log("Processed quiz questions:", quiz.value.questions);
   } catch (error) {
     console.error("Error fetching quiz:", error);
   }
 };
 
-const toggleIsCorrect = (option) => {
-  // Implement the logic to toggle correct answer for option
-  console.log("Toggling correct answer for option:", option);
+const toggleIsCorrect = (option, question) => {
+  // Toggle correct answer and mark the question as edited
+  option.is_correct = !option.is_correct;
+  markAsEdited(question);
 };
 
 const removeQuestion = async (index) => {
   // Implement the logic to remove question from quiz
   console.log("Removing question at index:", index);
-  // remove from index Question_ so only the number will stay
-  const questionId = index.replace("question_", "");
+  const questionId = quiz.value.questions[index].question_id.split("_")[1]; // Get the actual question ID
   console.log("Removing question with id:", questionId);
   const result = await deleteQuestion(quiz.value.quiz_id, questionId);
   if (result) {
@@ -274,10 +313,12 @@ const addOption = (question) => {
     option_text: "",
     is_correct: false,
   });
+  markAsEdited(question);
 };
 
 const removeOption = (question, index) => {
   question.options.splice(index, 1);
+  markAsEdited(question);
 };
 
 const showDeactivationTextArea = (participation) => {
@@ -330,10 +371,33 @@ const getVotingList = async () => {
   }
 };
 
+const markAsEdited = (question) => {
+  question.isEdited = true;
+};
+
+const editQuestion = async (question) => {
+  console.log("Editing question:", question);
+  const data = {
+    question_id: question.question_id.split("_")[1],
+    question_text: question.question_text,
+    open_question: question.open_question,
+    options: question.options,
+  };
+  try {
+    const result = await updateQuestion(data);
+    if (result) {
+      question.isEdited = false; // Reset the edited status
+      console.log("Question updated successfully");
+    } else {
+      console.error("Error updating question");
+    }
+  } catch (error) {
+    console.error("Error updating question:", error);
+  }
+};
+
 const titleFontSize = computed(() => {
   // You can adjust the multiplier as needed
-  // For example, to make the font size 5% of the viewport width:
-  // return `${5 * window.innerWidth / 100}px`;
   return `${(5 * document.documentElement.clientWidth) / 100}px`;
 });
 

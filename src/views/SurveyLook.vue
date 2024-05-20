@@ -10,6 +10,7 @@
         </v-row>
 
         <v-carousel
+          v-if="questions.length > 0"
           elevation="10"
           progress="deep-orange-darken-2"
           hide-delimiters
@@ -285,9 +286,17 @@ const fetchSurveyQuiz = async (code) => {
     selectedOptions.value = {};
   }
 };
-onMounted(() => {
+onMounted(async () => {
   checkQueryParam();
-  getSurvey();
+  await getSurvey();
+  // Preselect the first question
+  if (questions.value.length > 0) {
+    selectOption(
+      0,
+      questions.value[0].options[0].value,
+      questions.value[0].is_multiple
+    );
+  }
 });
 </script>
 
