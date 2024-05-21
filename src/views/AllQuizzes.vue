@@ -67,7 +67,7 @@
 
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import { getListOfQuizzes, activateQuizById } from "@api/quizzes";
+import { getListOfAllQuizzes, activateQuizById } from "@api/quizzes";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 
@@ -90,7 +90,7 @@ onMounted(async () => {
 // Fetch the quizzes data from the API
 const getQuizzes = async () => {
   try {
-    const response = await getListOfQuizzes();
+    const response = await getListOfAllQuizzes();
     quizzes.value = response.data; // Assign the fetched data to the reactive variable
     initializeFilters();
   } catch (error) {

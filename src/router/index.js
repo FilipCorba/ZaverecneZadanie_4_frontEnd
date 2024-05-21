@@ -9,6 +9,8 @@ import Quiz from "@views/Quiz.vue";
 import ActiveVote from "@views/ActiveVote.vue";
 import WordCloud from "@views/WordCloud.vue";
 import Statistics from "@views/Statistics.vue";
+import Manual from "@views/Manual.vue";
+import AllQuizzes from "@views/AllQuizzes.vue";
 
 const routes = [
   {
@@ -28,6 +30,7 @@ const routes = [
     component: Dashboard,
     meta: { requiresAuth: true },
   },
+  
   {
     path: "/profile",
     name: "Profile",
@@ -35,9 +38,21 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
+    path: "/manual",
+    name: "Manual",
+    component: Manual,
+    meta: { requiresAuth: false },
+  },
+  {
     path: "/quizzes",
     name: "Quizzes",
     component: Quiz,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/all-quizzes",
+    name: "AllQuizzes",
+    component: AllQuizzes,
     meta: { requiresAuth: true },
   },
   {

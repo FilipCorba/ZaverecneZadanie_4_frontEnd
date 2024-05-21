@@ -7,11 +7,14 @@
         <!--<v-app-bar-nav-icon></v-app-bar-nav-icon>-->
         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
 
-        <v-app-bar-title
-          ><span v-if="isWelcomeScreen"
-            >{{ $store.getters.currentTranslations.welcome }}
+        <v-app-bar-title>
+          <span v-if="isWelcomeScreen">
+            {{ $store.getters.currentTranslations.welcome }}
           </span>
-          {{ $store.getters.currentTranslations.title }}</v-app-bar-title
+          <span v-else>
+            {{ $store.getters.currentTranslations.title }}
+            <span v-if="pageTitle"> - {{ pageTitle }}</span>
+          </span></v-app-bar-title
         >
       </template>
 
@@ -88,9 +91,11 @@ const goToLogin = () => {
 const items = computed(() => [
   { title: store.getters.currentTranslations.home },
   { title: store.getters.currentTranslations.dashboard },
+  { title: store.getters.currentTranslations.all_quizzes },
   { title: store.getters.currentTranslations.generate_quiz },
   { title: store.getters.currentTranslations.walk_through },
   { title: store.getters.currentTranslations.profile },
+  { title: store.getters.currentTranslations.manual },
 ]);
 
 const handleMenuItemClick = (item) => {
@@ -102,10 +107,33 @@ const handleMenuItemClick = (item) => {
     router.push("/dashboard");
   } else if (item.title === store.getters.currentTranslations.generate_quiz) {
     router.push("/question-generator");
+  } else if (item.title === store.getters.currentTranslations.manual) {
+    router.push("/manual");
+  } else if (item.title === store.getters.currentTranslations.all_quizzes) {
+    router.push("/all-quizzes");
   } else {
     router.push("/");
   }
 };
+
+const pageTitle = computed(() => {
+  switch (route.name) {
+    case "Dashboard":
+      return store.getters.currentTranslations.dashboard;
+    case "GenerateQuiz":
+      return store.getters.currentTranslations.generate_quiz;
+    case "WalkThrough":
+      return store.getters.currentTranslations.walk_through;
+    case "Profile":
+      return store.getters.currentTranslations.profile;
+    case "Manual":
+      return store.getters.currentTranslations.manual;
+    case "AllQuizzes":
+      return store.getters.currentTranslations.all_quizzes;
+    default:
+      return null;
+  }
+});
 
 const logout = () => {
   store.commit("removeToken");

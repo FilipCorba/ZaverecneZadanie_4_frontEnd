@@ -1,9 +1,18 @@
 <template>
   <div>
     <h1 :style="{ fontSize: titleFontSize }">{{ quiz.quiz_title }}</h1>
-    <p>Description: {{ quiz.quiz_description }}</p>
-    <p>Created At: {{ quiz.quiz_created_at }}</p>
-    <p>Subject: {{ quiz.subject }}</p>
+    <p>
+      {{ $store.getters.currentTranslations.survey_description }}:
+      {{ quiz.quiz_description }}
+    </p>
+    <p>
+      {{ $store.getters.currentTranslations.survey_created_at }}:
+      {{ quiz.quiz_created_at }}
+    </p>
+    <p>
+      {{ $store.getters.currentTranslations.survey_subject }}:
+      {{ quiz.subject }}
+    </p>
 
     <!-- Display Questions and Answers -->
     <v-row>
@@ -11,6 +20,7 @@
         <v-card class="questions-list-card">
           <v-list>
             <v-list-item
+              v-if="quiz.questions && quiz.questions.length > 0"
               v-for="(question, index) in quiz.questions"
               :key="index"
               :title="question.question_text"
@@ -24,17 +34,24 @@
                     v-model="question.question_text"
                     outlined
                     dense
-                    label="Question Text"
+                    :label="$store.getters.currentTranslations.question"
                     @input="markAsEdited(question)"
                   ></v-text-field>
                 </v-list-item-title>
-                <v-row>
-                  <v-col cols="6">
-                    <v-switch
-                      v-model="question.open_question"
-                      label="Open Answer"
-                      @change="markAsEdited(question)"
-                    ></v-switch>
+                <v-row align="left">
+                  <v-col cols="12">
+                    <v-btn
+                      @click="toggleOpenQuestion(question)"
+                      :color="question.open_question ? 'success' : 'info'"
+                    >
+                      <span class="answer-text">
+                        {{
+                          question.open_question
+                            ? $store.getters.currentTranslations.is_open
+                            : $store.getters.currentTranslations.is_not_open
+                        }}</span
+                      >
+                    </v-btn>
                   </v-col>
                 </v-row>
 
@@ -46,7 +63,9 @@
                   <v-col cols="7">
                     <v-text-field
                       v-model="option.option_text"
-                      :label="'Option ' + (i + 1)"
+                      :label="
+                        $store.getters.currentTranslations.option + (i + 1)
+                      "
                       variant="underlined"
                       @input="markAsEdited(question)"
                     ></v-text-field>
@@ -62,7 +81,9 @@
                       class="answer-btn"
                     >
                       <span class="answer-text">{{
-                        option.is_correct ? "Correct" : "Incorrect"
+                        option.is_correct
+                          ? $store.getters.currentTranslations.correct
+                          : $store.getters.currentTranslations.incorrect
                       }}</span>
                     </v-btn>
                   </v-col>
@@ -110,13 +131,16 @@
                       variant="outlined"
                       class="my-2"
                     >
-                      Edit
+                      {{ $store.getters.currentTranslations.edit }}
                     </v-btn>
                   </v-col>
                 </v-row>
               </v-list-item-action>
             </v-list-item>
           </v-list>
+          <v-btn @click="deleteQuiz" color="red darken-2">{{
+            $store.getters.currentTranslations.delete_quiz
+          }}</v-btn>
         </v-card>
       </v-col>
 
@@ -128,7 +152,7 @@
         >
           <!-- Display voting items with end_time -->
           <v-subheader v-if="votingList.withEndTime.length">
-            Voting List with End Time
+            {{ $store.getters.currentTranslations.with_end_time }}
           </v-subheader>
           <div class="scrollable-list">
             <v-list-item-group>
@@ -151,12 +175,14 @@
                         class="d-flex transition-fast-in-fast-out bg-orange-darken-2 v-card--reveal text-h6"
                         style="height: 100%"
                       >
-                        Note: {{ participation.note }}
+                        {{ $store.getters.currentTranslations.note }}:
+                        {{ participation.note }}
                       </div>
                     </v-expand-transition>
                     <v-card-text>
                       <div class="font-weight-light text-grey text-h6">
-                        Code: {{ participation.code }}
+                        {{ $store.getters.currentTranslations.code }}:
+                        {{ participation.code }}
                       </div>
                     </v-card-text>
                   </v-card>
@@ -165,6 +191,24 @@
                       {{ participation.end_time }}
                     </v-list-item-title>
                   </v-list-item-content>
+                  <v-list-item-action>
+                    <v-btn
+                      icon
+                      @click="downloadExport(participation)"
+                      color="blue-darken-2"
+                      class="mr-3"
+                    >
+                      <v-icon>mdi-download</v-icon>
+                    </v-btn>
+                    <v-btn
+                      icon
+                      @click="showStats(participation)"
+                      color="green darken-2"
+                      class="mr-3"
+                    >
+                      <v-icon>mdi-chart-bar</v-icon>
+                    </v-btn>
+                  </v-list-item-action>
                 </v-hover>
               </v-list-item>
             </v-list-item-group>
@@ -178,7 +222,7 @@
 
           <!-- Display voting items without end_time -->
           <v-subheader v-if="votingList.withoutEndTime.length">
-            Voting List without End Time
+            {{ $store.getters.currentTranslations.without_end_time }}
           </v-subheader>
           <div class="scrollable-list">
             <v-list-item-group>
@@ -196,20 +240,40 @@
                 >
                   <v-card-text>
                     <div class="font-weight-light text-grey text-h6">
-                      Code: {{ participation.code }}
+                      {{ $store.getters.currentTranslations.code }}:
+                      {{ participation.code }}
                     </div>
                   </v-card-text>
                 </v-card>
                 <v-list-item-content>
-                  <v-list-item-title> No End Time </v-list-item-title>
+                  <v-list-item-title
+                    >{{ $store.getters.currentTranslations.no_end_time }}
+                  </v-list-item-title>
                 </v-list-item-content>
                 <v-list-item-action>
                   <v-btn
                     icon
                     @click="showDeactivationTextArea(participation)"
                     color="red darken-2"
+                    class="mr-3"
                   >
                     <v-icon>mdi-cancel</v-icon>
+                  </v-btn>
+                  <v-btn
+                    icon
+                    @click="showParticipationQR(participation)"
+                    color="green darken-2"
+                    class="mr-3"
+                  >
+                    <v-icon>mdi-qrcode</v-icon>
+                  </v-btn>
+                  <v-btn
+                    icon
+                    @click="showStats(participation)"
+                    color="green darken-2"
+                    class="mr-3"
+                  >
+                    <v-icon>mdi-chart-bar</v-icon>
                   </v-btn>
                 </v-list-item-action>
                 <v-list-item-action v-if="participation.showTextArea">
@@ -221,13 +285,13 @@
                     color="green darken-2"
                     @click="confirmDeactivation(participation)"
                   >
-                    Confirm
+                    {{ $store.getters.currentTranslations.confirm }}
                   </v-btn>
                   <v-btn
                     color="red darken-2"
                     @click="hideDeactivationTextArea(participation)"
                   >
-                    Cancel
+                    {{ $store.getters.currentTranslations.cancel }}
                   </v-btn>
                 </v-list-item-action>
               </v-list-item>
@@ -236,27 +300,44 @@
         </v-card>
       </v-col>
     </v-row>
-    <!-- Image -->
-    <v-img
-      :src="quiz.image_path"
-      alt="Image description"
-      width="300px"
-      height="auto"
-    ></v-img>
   </div>
+  <v-dialog v-model="dialogDelete" max-width="500">
+    <v-card>
+      <v-card-title class="headline">
+        {{ $store.getters.currentTranslations.confirm_deletion }}
+      </v-card-title>
+      <v-card-text>
+        {{ $store.getters.currentTranslations.delete_confirmation_message }}
+      </v-card-text>
+      <v-card-actions>
+        <v-btn color="red darken-1" text @click="dialogDelete = false">
+          {{ $store.getters.currentTranslations.cancel }}
+        </v-btn>
+        <v-btn color="green darken-1" text @click="confirmDelete">
+          {{ $store.getters.currentTranslations.confirm }}
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </template>
 
 <script setup>
 import { ref, onMounted, computed } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import {
   getQuizById,
   getVotingListOfQuizzes,
   deactivateSurveyById,
+  deleteQuizById,
 } from "@api/quizzes";
-import { deleteQuestion, updateQuestion } from "@api/questions"; // Ensure updateQuestion is available
+import { deleteQuestion, updateQuestion, getExport } from "@api/questions";
+import { saveAs } from "file-saver";
 
+import { useStore } from "vuex";
+
+const store = useStore();
 const route = useRoute();
+const router = useRouter();
 
 const quiz = ref({});
 const quiz_id = ref(route.query.id);
@@ -294,17 +375,53 @@ const toggleIsCorrect = (option, question) => {
   option.is_correct = !option.is_correct;
   markAsEdited(question);
 };
+const toggleOpenQuestion = (question) => {
+  question.open_question = !question.open_question;
+  markAsEdited(question);
+};
 
+const deleteQuiz = async () => {
+  dialogDelete.value = true;
+};
+const confirmDelete = async () => {
+  // Close the dialog
+  dialogDelete.value = false;
+
+  const result = await deleteQuizById(quiz_id.value);
+  if (result) {
+    router.push("/dashboard");
+  } else {
+    dialogDelete.value = false;
+    return
+  }
+};
 const removeQuestion = async (index) => {
-  // Implement the logic to remove question from quiz
   console.log("Removing question at index:", index);
   const questionId = quiz.value.questions[index].question_id.split("_")[1]; // Get the actual question ID
+
+  if (quiz.value.questions.length === 1) {
+    deleteQuiz();
+  }
   console.log("Removing question with id:", questionId);
   const result = await deleteQuestion(quiz.value.quiz_id, questionId);
   if (result) {
     quiz.value.questions.splice(index, 1);
   } else {
     console.error("Error deleting question");
+  }
+};
+
+const downloadExport = async (participation) => {
+  try {
+    const response = await getExport(participation.participation_id);
+    const data = response;
+
+    const jsonBlob = new Blob([JSON.stringify(data, null, 2)], {
+      type: "application/json",
+    });
+    saveAs(jsonBlob, `export_${participation.participation_id}.json`);
+  } catch (error) {
+    console.error("Error exporting data:", error);
   }
 };
 
@@ -400,6 +517,22 @@ const titleFontSize = computed(() => {
   // You can adjust the multiplier as needed
   return `${(5 * document.documentElement.clientWidth) / 100}px`;
 });
+
+const showParticipationQR = (participation) => {
+  console.log("Showing QR for participation:", participation);
+  router.push({
+    path: "/active-vote",
+    query: { id: participation.participation_id, code: participation.code },
+  });
+};
+
+const showStats = (participation) => {
+  console.log("Showing stats for participation:", participation);
+  router.push({
+    path: "/statistics",
+    query: { participation_id: participation.participation_id },
+  });
+};
 
 onMounted(() => {
   getQuiz();

@@ -274,12 +274,11 @@ const submitQuiz = async () => {
     })),
   };
 
-  route.push("/dashboard");
-
   try {
     const result = await postQuiz(quizData);
     console.log(result);
     image_path.value = result.image;
+    route.push("/dashboard");
   } catch (error) {
     console.error("Error submitting quiz:", error);
   }

@@ -13,7 +13,8 @@ export default {
   survey: "Anketa",
   generate_quiz: "Generovať kvíz",
   title: "SURVIO",
-
+  manual: "Manuál",
+  all_quizzes: "Všetky kvízy",
 
   //Welcome
   phrase: "Rýchlo Zhromažďuj, Analyzuj a Konaj",
@@ -53,13 +54,14 @@ export default {
   password_confirmation: "Potvrď heslo",
   password_mismatch: "Heslá sa nezhodujú",
 
-
   //Profile
   old_password: "Staré heslo",
   new_password: "Nové heslo",
   new_password_confirmation: "Potvrď nové heslo",
   impersonated: "Branný ako tento užívateľ",
   not_impersonated: "Nie je branný ako tento užívateľ",
+  admin: "Admin",
+  user: "Užívateľ",
 
   //Dashboard
   survey_title: "Názov ankety",
@@ -70,5 +72,39 @@ export default {
   survey_status_inactive: "Neaktívna",
   survey_subject: "Predmet ankety",
   survey_number_of_questions: "Počet otázok",
+  none_option: "Žiadne",
 
+  //Quiz
+  question: "Otázka",
+  is_open: "Otvorená",
+  is_not_open: "Jedna voľba / viacero možností",
+  correct: "Správna",
+  incorrect: "Nesprávna",
+  edit: "Upraviť",
+  with_end_time: "S koncovým časom",
+  without_end_time: "Bez koncového času",
+  note: "Poznámka",
+  code: "Kód",
+  no_end_time: "Bez koncového času",
+  confirm: "Potvrdiť",
+  cancel: "Zrušiť",
+  option: "Možnosť",
+  delete_quiz: "Vymazať kvíz",
+
+  // Manual
+  welcome: "Vitajte v našej aplikácii pre online hlasovanie!",
+  manual_title: "Návod",
+  login_register: "Prihlásenie a registrácia:",
+  login_description:
+    "Na úvodnej stránke aplikácie máte možnosť prihlásiť sa pomocou vašich prihlasovacích údajov. Ak ste nový používateľ, môžete sa zaregistrovať kliknutím na tlačidlo 'Registrácia'. Po úspešnej registrácii získate prístupové údaje do aplikácie.",
+  guest_functions: "Funkcie neprihláseného používateľa:",
+  guest_functions_description:
+    "Po prihlásení do aplikácie získate prístup k zobrazeniu hlasovacích otázok. Môžete pristupovať k otázkam pomocou načítania QR kódu, zadaním vstupného kódu na úvodnej stránke alebo zadaním adresy otázky do prehliadača. Po zodpovedaní otázky budete presmerovaní na stránku s grafickým zobrazením výsledkov hlasovania.",
+  user_functions: "Funkcie prihláseného používateľa:",
+  user_functions_description:
+    "Prihlásený používateľ má možnosť zmeniť svoje heslo a spravovať svoj účet. Môže definovať nové hlasovacie otázky a špecifikovať, ktoré z nich sú aktívne a ktoré nie. Pre každú otázku je možné generovať QR kód a jedinečný kód, ktorý slúži na zobrazenie otázky. Používateľ môže definovať otázky s výberom správnej odpovede alebo s otvorenou krátkou odpoveďou. Pri otázkach s otvorenou odpoveďou môže používateľ definovať spôsob zobrazenia výsledkov hlasovania. Je možné upravovať, mazať a kopírovať definované otázky. Používateľ môže ku každej otázke definovať, k akému predmetu sa vzťahuje a filtrovať otázky podľa predmetu a dátumu vytvorenia. Je možné uzatvoriť aktuálne hlasovania na danú otázku a zobraziť výsledky aktuálnych a archivovaných hlasovaní.",
+  admin_functions: "Funkcie administrátora:",
+  admin_functions_description:
+    "Administrátor má rovnakú funkcionalitu ako prihlásený používateľ s možnosťou filtrovania nad všetkými používateľmi. Pri vytváraní nových hlasovacích otázok môže špecifikovať, v koho mene to robí. Má prístup k správe prihlásených používateľov vrátane vytvárania, úpravy a odstránenia používateľských účtov.",
+  export_to_pdf: "Export do PDF",
 };

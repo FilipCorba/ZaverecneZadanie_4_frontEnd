@@ -12,6 +12,10 @@ export default defineConfig({
       "@language": path.resolve(__dirname, "./src/language"),
       "@apiManger": path.resolve(__dirname, "./src/api/api_manager.js"),
       "@api": path.resolve(__dirname, "./src/api"),
+      "@assets": path.resolve(__dirname, "./src/assets"),
     },
+  },
+  build: {
+    watch: "./vite.config.js",
   },
 });

@@ -18,18 +18,28 @@ export async function getQrCode(qrCodeId) {
   }
 }
 
-
-
-export async function generateQR(participation_id) {
+export async function generateQR(participation_id, code) {
   try {
-    const response = await apiManager.get(
-      `/api/v1/quiz.php/generate-qr?participation-id=${participation_id}`
-    );
-    if (response.status === 200) {
-      return response.data;
+    if (!code) {
+      const response = await apiManager.get(
+        `/api/v1/quiz.php/generate-qr?participation-id=${participation_id}`
+      );
+      if (response.status === 200) {
+        return response.data;
+      } else {
+        console.error("Request failed with status:", response.status);
+        return false;
+      }
     } else {
-      console.error("Request failed with status:", response.status);
-      return false;
+      const response = await apiManager.get(
+        `/api/v1/quiz.php/generate-qr?participation-id=${participation_id}&code=${code}`
+      );
+      if (response.status === 200) {
+        return response.data;
+      } else {
+        console.error("Request failed with status:", response.status);
+        return false;
+      }
     }
   } catch (error) {
     console.error("Request failed with error:", error);

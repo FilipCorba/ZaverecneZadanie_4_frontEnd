@@ -13,8 +13,9 @@ import { useRoute } from "vue-router";
 import { generateQR } from "@api/qr_code";
 
 const route = useRoute();
-const participationId = ref(route.query.id);
-const code = ref("");
+console.log("Route:", route.query);
+let participationId = ref(route.query.id);
+let code = ref(route.query.code); // Use route.query.code instead of router.query.code
 const image = ref("");
 
 const generateQrCode = async () => {
@@ -27,8 +28,21 @@ const generateQrCode = async () => {
   }
 };
 
+const getQrCode = async () => {
+  try {
+    const response = await generateQR(participationId.value, code.value);
+    image.value = response.image;
+  } catch (error) {
+    console.error("Error fetching QR:", error);
+  }
+};
+
 onMounted(async () => {
-  generateQrCode();
+  if (code.value === undefined) {
+    generateQrCode();
+  } else {
+    getQrCode();
+  }
 });
 </script>
 
