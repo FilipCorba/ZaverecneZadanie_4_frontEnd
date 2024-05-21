@@ -8,7 +8,7 @@ export async function getListOfSubjects() {
       `/api/v1/quiz.php/subjects?user-id=${userID}`
     );
     if (response.status === 200) {
-      console.log(response.data);
+      
       return response.data;
     } else {
       console.error("Request failed with status:", response.status);

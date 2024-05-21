@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const ApiCompetitionFlowManager = axios.create({
-  baseURL: import.meta.env.VITE_BASE_URL,
+  baseURL: import.meta.env.VITE_DOCKER_URL,
   responseType: "json",
   headers: {
     "Content-Type": "application/json",

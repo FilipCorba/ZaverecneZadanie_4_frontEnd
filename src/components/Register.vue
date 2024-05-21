@@ -56,7 +56,7 @@
         </v-alert>
 
         <v-btn color="deep-orange-darken-2" @click="submitRegistration"
-          >Register</v-btn
+          >{{ $store.getters.currentTranslations.login }}</v-btn
         >
       </v-fade-transition>
     </v-card-text>
@@ -208,10 +208,10 @@ const submitRegistration = async () => {
     setTimeout(() => {
       loginError.value = false;
     }, 5000); // 5000 milliseconds = 5 seconds*/
-        console.log("Login error");
+        
         return;
       } else {
-        console.log(responseLogin);
+        
 
         const token = responseLogin.token;
         localStorage.setItem("token", token);

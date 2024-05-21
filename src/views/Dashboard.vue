@@ -54,7 +54,7 @@
                   color="deep-orange-darken-2"
                   @click.stop="activateQuiz(item)"
                 >
-                  Activate Quiz
+                 {{ $store.getters.currentTranslations.activate_survey }}
                 </v-btn>
               </td>
             </tr>
@@ -208,7 +208,7 @@ const filteredHeaders = computed(() => {
 
 // Handle row click event
 const handleRowClick = (item) => {
-  console.log("Clicked item:", item);
+  
   router.push({ path: "/quizzes", query: { id: item.quiz_id } });
 };
 
@@ -216,7 +216,7 @@ const handleRowClick = (item) => {
 const activateQuiz = async (quiz) => {
   const result = await activateQuizById(quiz.quiz_id);
   if (result) {
-    console.log("Quiz activated:", result);
+    
     const participation_id = result.participation_id;
     router.push({ path: "/active-vote", query: { id: participation_id } });
   } else {

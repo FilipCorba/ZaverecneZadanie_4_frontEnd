@@ -14,8 +14,8 @@
           <span v-else>
             {{ $store.getters.currentTranslations.title }}
             <span v-if="pageTitle"> - {{ pageTitle }}</span>
-          </span></v-app-bar-title
-        >
+          </span>
+        </v-app-bar-title>
       </template>
 
       <v-spacer></v-spacer>
@@ -67,9 +67,10 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue"; //,watch
+import { ref, computed, onMounted, watch } from "vue";
 import { useStore } from "vuex";
 import { useRouter, useRoute } from "vue-router";
+import { getUserByID } from "@api/user"; // Adjust the import path according to your project structure
 
 const store = useStore();
 const router = useRouter();
@@ -78,6 +79,17 @@ const isWelcomeScreen = computed(() => route.name === "Welcome");
 const selectedLanguage = ref(store.getters.currentLanguage);
 const isAuthenticated = computed(() => store.getters.isAuthenticated);
 const drawer = ref(false);
+const userRole = ref(null);
+
+const fetchUserRole = async () => {
+  const userID = localStorage.getItem("user_id");
+  try {
+    const response = await getUserByID(userID);
+    userRole.value = response.role;
+  } catch (error) {
+    console.error("Error fetching user role:", error);
+  }
+};
 
 const changeLanguage = (language) => {
   selectedLanguage.value = language;
@@ -88,21 +100,25 @@ const goToLogin = () => {
   router.push("/login");
 };
 
-const items = computed(() => [
-  { title: store.getters.currentTranslations.home },
-  { title: store.getters.currentTranslations.dashboard },
-  { title: store.getters.currentTranslations.all_quizzes },
-  { title: store.getters.currentTranslations.generate_quiz },
-  { title: store.getters.currentTranslations.walk_through },
-  { title: store.getters.currentTranslations.profile },
-  { title: store.getters.currentTranslations.manual },
-]);
+const items = computed(() => {
+  const baseItems = [
+    { title: store.getters.currentTranslations.home },
+    { title: store.getters.currentTranslations.dashboard },
+    { title: store.getters.currentTranslations.generate_quiz },
+    { title: store.getters.currentTranslations.profile },
+    { title: store.getters.currentTranslations.manual },
+  ];
+  if (userRole.value === "admin") {
+    baseItems.splice(2, 0, {
+      title: store.getters.currentTranslations.all_quizzes,
+    });
+  }
+  return baseItems;
+});
 
 const handleMenuItemClick = (item) => {
   if (item.title === store.getters.currentTranslations.profile) {
     router.push("/profile");
-  } else if (item.title === store.getters.currentTranslations.walk_through) {
-    router.push("/walk-through");
   } else if (item.title === store.getters.currentTranslations.dashboard) {
     router.push("/dashboard");
   } else if (item.title === store.getters.currentTranslations.generate_quiz) {
@@ -122,8 +138,6 @@ const pageTitle = computed(() => {
       return store.getters.currentTranslations.dashboard;
     case "GenerateQuiz":
       return store.getters.currentTranslations.generate_quiz;
-    case "WalkThrough":
-      return store.getters.currentTranslations.walk_through;
     case "Profile":
       return store.getters.currentTranslations.profile;
     case "Manual":
@@ -141,7 +155,16 @@ const logout = () => {
 };
 
 onMounted(() => {
-  console.log("is auth" + isAuthenticated.value);
+  
+  if (isAuthenticated.value) {
+    fetchUserRole();
+  }
+});
+
+watch(route, async () => {
+  if (isAuthenticated.value) {
+    await fetchUserRole();
+  }
 });
 </script>
 
@@ -153,21 +176,18 @@ onMounted(() => {
 }
 
 .selected-flag {
-  filter: grayscale(0%); /* Keep the color for the selected flag */
+  filter: grayscale(0%);
 }
 
-/* Apply grayscale filter to unselected flags */
 .flag:not(.selected-flag) {
   filter: grayscale(100%);
 }
 
-/* Add styles for the flags wrapper */
 .flags-wrapper {
   display: flex;
   align-items: center;
 }
 
-/* Add spacing between the flags */
 .flag + .flag {
   margin-left: 10px;
 }
@@ -178,7 +198,6 @@ onMounted(() => {
   height: 100%;
 }
 
-/* Ensure the logout button is at the bottom of the sidebar */
 .v-navigation-drawer .v-list:last-child {
   margin-top: auto;
 }

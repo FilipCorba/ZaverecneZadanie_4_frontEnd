@@ -55,3 +55,21 @@ const userID = localStorage.getItem("user_id");
     return false;
   }
 }
+
+export async function copyQuestion(questionID) {
+  const userID = localStorage.getItem("user_id");
+  try {
+    const response = await apiManager.post(
+      `/api/v1/quiz.php/copy?user-id=${userID}&question-id=${questionID}`
+    );
+    if (response.status === 200) {
+      return true
+    } else {
+      console.error("Request failed with status:", response.status);
+      return false;
+    }
+  } catch (error) {
+    console.error("Request failed with error:", error);
+    return false;
+  }
+}

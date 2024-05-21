@@ -39,8 +39,8 @@
             >
               {{
                 isLogin
-                  ? $store.getters.currentTranslations.register
-                  : $store.getters.currentTranslations.login
+                  ? $store.getters.currentTranslations.register_here
+                  : $store.getters.currentTranslations.login_here
               }}
             </v-btn>
           </v-row>

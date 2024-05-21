@@ -276,7 +276,7 @@ const submitQuiz = async () => {
 
   try {
     const result = await postQuiz(quizData);
-    console.log(result);
+    
     image_path.value = result.image;
     route.push("/dashboard");
   } catch (error) {
@@ -288,7 +288,7 @@ const getSubjects = async () => {
   try {
     const result = await getListOfSubjects();
     subjects.value = result.map((subject) => subject.name); // Extract names from objects
-    console.log(subjects.value);
+    
   } catch (error) {
     console.error("Error fetching subjects:", error);
   }
@@ -302,7 +302,7 @@ const checkCustomOption = (value) => {
 // Handle input in the custom option text field
 const handleCustomOptionInput = (event) => {
   const value = event.target.value; // Retrieve the value from the event object
-  console.log("Custom option input:", value);
+  
   selectedSubject.value = value; // Update the selected subject with the custom value
 };
 

@@ -122,7 +122,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem("token");
-  console.log(token);
+  
 
   if (to.meta.requiresAuth) {
     if (token === null || token === undefined) {

@@ -27,7 +27,7 @@
       </v-fade-transition>
     </v-card-text>
     <!--<v-card-actions>-->
-      <v-btn color="deep-orange-darken-2" @click="submitLogin">Login</v-btn>
+      <v-btn color="deep-orange-darken-2" @click="submitLogin">{{ $store.getters.currentTranslations.login }}</v-btn>
     <!--</v-card-actions>-->
   </v-card>
 </template>
@@ -94,7 +94,7 @@ const submitLogin = async () => {
     }, 5000); // 5000 milliseconds = 5 seconds
     return;
   } else {
-    console.log(response);
+    
 
     const token = response.token;
     localStorage.setItem("token", token);

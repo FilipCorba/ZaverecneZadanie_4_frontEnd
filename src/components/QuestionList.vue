@@ -162,7 +162,7 @@ const submitQuiz = async () => {
     })),
   };
 
-  console.log(quizData);
+  
 
   // Implement the logic to submit quiz data
 };

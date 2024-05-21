@@ -11,16 +11,16 @@ export default {
   profile: "Profil",
   dashboard: "Dashboard",
   survey: "Anketa",
-  generate_quiz: "Generovať kvíz",
+  generate_quiz: "Generovať anketu",
   title: "SURVIO",
   manual: "Manuál",
-  all_quizzes: "Všetky kvízy",
+  all_quizzes: "Všetky ankety",
 
   //Welcome
   phrase: "Rýchlo Zhromažďuj, Analyzuj a Konaj",
   field_label: "Pridaj kód sem",
   connect_btn: "Pripojiť",
-  generate_btn: "Generovať otázku",
+  generate_btn: "Generovať anketu",
 
   //Survey
   continue_btn: "Pokračovať",
@@ -73,6 +73,7 @@ export default {
   survey_subject: "Predmet ankety",
   survey_number_of_questions: "Počet otázok",
   none_option: "Žiadne",
+  activate_survey: "Aktivovať",
 
   //Quiz
   question: "Otázka",
@@ -89,7 +90,9 @@ export default {
   confirm: "Potvrdiť",
   cancel: "Zrušiť",
   option: "Možnosť",
-  delete_quiz: "Vymazať kvíz",
+  delete_quiz: "Vymazať anketu",
+  delete_confirmation_message: "Naozaj chcete vymazať tento anketu?",
+  delete_confirmation_title: "Vymazať anketu",
 
   // Manual
   welcome: "Vitajte v našej aplikácii pre online hlasovanie!",
@@ -102,9 +105,9 @@ export default {
     "Po prihlásení do aplikácie získate prístup k zobrazeniu hlasovacích otázok. Môžete pristupovať k otázkam pomocou načítania QR kódu, zadaním vstupného kódu na úvodnej stránke alebo zadaním adresy otázky do prehliadača. Po zodpovedaní otázky budete presmerovaní na stránku s grafickým zobrazením výsledkov hlasovania.",
   user_functions: "Funkcie prihláseného používateľa:",
   user_functions_description:
-    "Prihlásený používateľ má možnosť zmeniť svoje heslo a spravovať svoj účet. Môže definovať nové hlasovacie otázky a špecifikovať, ktoré z nich sú aktívne a ktoré nie. Pre každú otázku je možné generovať QR kód a jedinečný kód, ktorý slúži na zobrazenie otázky. Používateľ môže definovať otázky s výberom správnej odpovede alebo s otvorenou krátkou odpoveďou. Pri otázkach s otvorenou odpoveďou môže používateľ definovať spôsob zobrazenia výsledkov hlasovania. Je možné upravovať, mazať a kopírovať definované otázky. Používateľ môže ku každej otázke definovať, k akému predmetu sa vzťahuje a filtrovať otázky podľa predmetu a dátumu vytvorenia. Je možné uzatvoriť aktuálne hlasovania na danú otázku a zobraziť výsledky aktuálnych a archivovaných hlasovaní.",
+    "Prihlásený používateľ má možnosť zmeniť svoje heslo a spravovať svoj účet. Môže definovať nové hlasovacie ankety a špecifikovať, ktoré z nich sú aktívne a ktoré nie. Pre každú anketu je možné generovať QR kód a jedinečný kód, ktorý slúži na zobrazenie otázky. Používateľ môže definovať otázky s výberom správnej odpovede s otvorenou krátkou odpoveďou alebo s viacerími odpoveďami. Je možné upravovať, mazať a kopírovať definované otázky. Používateľ môže ku každej otázke definovať, k akému predmetu sa vzťahuje a filtrovať otázky podľa predmetu a dátumu vytvorenia takisto aj uspordúvať. Je možné uzatvoriť aktuálne hlasovania na danú otázku a zobraziť výsledky aktuálnych a archivovaných hlasovaní. Používaťeľ si može exportovať otázka a odpovede do JSON formátu.",
   admin_functions: "Funkcie administrátora:",
   admin_functions_description:
-    "Administrátor má rovnakú funkcionalitu ako prihlásený používateľ s možnosťou filtrovania nad všetkými používateľmi. Pri vytváraní nových hlasovacích otázok môže špecifikovať, v koho mene to robí. Má prístup k správe prihlásených používateľov vrátane vytvárania, úpravy a odstránenia používateľských účtov.",
+    "Administrátor má rovnakú funkcionalitu ako prihlásený používateľ s možnosťou filtrovania nad všetkými používateľmi. Pri vytváraní nových hlasovacích otázok môže špecifikovať, v koho mene to robí. Má prístup k správe prihlásených používateľov vrátane vytvárania, úpravy účtov a mnoho dalsich funkcii.",
   export_to_pdf: "Export do PDF",
 };

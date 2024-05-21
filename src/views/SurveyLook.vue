@@ -160,7 +160,7 @@ const connect = async () => {
     participation_id: participation_id.value,
     questions: questionsData,
   };
-  console.log("Submitting vote:", result);
+  
 
   const response = await sendVote(result);
   if (response) {
@@ -197,21 +197,21 @@ const checkQueryParam = () => {
   if (!queryParam.value) {
     router.push({ path: "/welcome" });
   } else {
-    console.log("Query parameter found:", queryParam.value);
+    
   }
 };
 
 const getSurvey = async () => {
-  console.log("Getting survey quiz with query code " + queryParam.value);
+  
   const result = await getSurveyQuiz(queryParam.value);
-  console.log(result);
+  
 
   if (!result) {
     dialogVisible.value = true;
     return;
   }
 
-  console.log("Survey data:", result.participation_id);
+  
 
   if (result.survey.length > 0) {
     participation_id.value = result.participation_id;
@@ -261,9 +261,9 @@ const allQuestionsAnswered = computed(() => {
   );
 });
 const fetchSurveyQuiz = async (code) => {
-  console.log("Getting survey quiz with query code " + code);
+  
   const result = await getSurveyQuiz(code);
-  console.log(result);
+  
 
   if (!result) {
     dialogVisible.value = true;

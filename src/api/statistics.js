@@ -6,7 +6,6 @@ export async function getStatistics(participationID) {
       `/api/v1/quiz.php/statistics?participation-id=${participationID}`
     );
     if (response.status === 200) {
-      console.log(response.data);
       return response.data;
     } else {
       console.error("Request failed with status:", response.status);

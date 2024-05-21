@@ -10,9 +10,9 @@
     <!-- Change Password Modal -->
     <v-dialog v-model="showModal" max-width="600">
       <template v-slot:activator="{ on }">
-        <button @click="showChangePasswordModal" v-on="on">
+        <v-btn variant="outlined" @click="showChangePasswordModal" v-on="on">
           Change Password
-        </button>
+        </v-btn>
       </template>
 
       <v-card prepend-icon="mdi-account" title="Write your password">

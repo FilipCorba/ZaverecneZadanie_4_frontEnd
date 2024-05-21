@@ -112,6 +112,9 @@
                     >
                       <v-icon>mdi-plus</v-icon>
                     </v-btn>
+                    <v-btn icon @click="copy(index)" color="info">
+                      <v-icon>mdi-content-copy</v-icon>
+                    </v-btn>
                   </v-col>
                   <v-col cols="12" sm="6" md="3">
                     <v-btn
@@ -205,6 +208,15 @@
                       @click="showStats(participation)"
                       color="green darken-2"
                       class="mr-3"
+                    >
+                      <v-icon>mdi-chart-bar</v-icon>
+                    </v-btn>
+                    <v-btn
+                      icon
+                      @click="showWordCloud(participation)"
+                      color="info"
+                      class="mr-3"
+                      label="WordCloud"
                     >
                       <v-icon>mdi-chart-bar</v-icon>
                     </v-btn>
@@ -304,7 +316,7 @@
   <v-dialog v-model="dialogDelete" max-width="500">
     <v-card>
       <v-card-title class="headline">
-        {{ $store.getters.currentTranslations.confirm_deletion }}
+        {{ $store.getters.currentTranslations.delete_confirmation_title }}
       </v-card-title>
       <v-card-text>
         {{ $store.getters.currentTranslations.delete_confirmation_message }}
@@ -330,9 +342,9 @@ import {
   deactivateSurveyById,
   deleteQuizById,
 } from "@api/quizzes";
-import { deleteQuestion, updateQuestion, getExport } from "@api/questions";
+import { deleteQuestion, updateQuestion, getExport, copyQuestion } from "@api/questions";
 import { saveAs } from "file-saver";
-
+const dialogDelete = ref(false);
 import { useStore } from "vuex";
 
 const store = useStore();
@@ -348,7 +360,7 @@ const getQuiz = async () => {
   try {
     const response = await getQuizById(quiz_id.value);
     quiz.value = response;
-    console.log("Fetched quiz:", quiz.value);
+    
 
     // Transform the questions object into an array and add question_id to each question
     if (quiz.value.questions && typeof quiz.value.questions === "object") {
@@ -364,7 +376,7 @@ const getQuiz = async () => {
 
     // Initialize isEdited property for each question
     quiz.value.questions.forEach((question) => (question.isEdited = false));
-    console.log("Processed quiz questions:", quiz.value.questions);
+    
   } catch (error) {
     console.error("Error fetching quiz:", error);
   }
@@ -380,6 +392,13 @@ const toggleOpenQuestion = (question) => {
   markAsEdited(question);
 };
 
+const showWordCloud = (participation) => {
+    router.push({
+    path: "/word-cloud",
+    query: { id: participation.participation_id },
+  });
+}
+
 const deleteQuiz = async () => {
   dialogDelete.value = true;
 };
@@ -392,24 +411,34 @@ const confirmDelete = async () => {
     router.push("/dashboard");
   } else {
     dialogDelete.value = false;
-    return
+    return;
   }
 };
 const removeQuestion = async (index) => {
-  console.log("Removing question at index:", index);
-  const questionId = quiz.value.questions[index].question_id.split("_")[1]; // Get the actual question ID
-
   if (quiz.value.questions.length === 1) {
     deleteQuiz();
-  }
-  console.log("Removing question with id:", questionId);
-  const result = await deleteQuestion(quiz.value.quiz_id, questionId);
-  if (result) {
-    quiz.value.questions.splice(index, 1);
   } else {
-    console.error("Error deleting question");
+    
+    const questionId = quiz.value.questions[index].question_id.split("_")[1]; // Get the actual question ID
+    
+    const result = await deleteQuestion(quiz.value.quiz_id, questionId);
+    if (result) {
+      quiz.value.questions.splice(index, 1);
+    } else {
+      console.error("Error deleting question");
+    }
   }
 };
+
+const copy = async (index) => {
+  const questionId = quiz.value.questions[index].question_id.split("_")[1];
+  const result = await copyQuestion(questionId)
+  if (result) {
+    getQuiz()
+  } else {
+    console.error("error while copying")
+  }
+}
 
 const downloadExport = async (participation) => {
   try {
@@ -467,7 +496,7 @@ const confirmDeactivation = async (participation) => {
 
 const getVotingList = async () => {
   try {
-    console.log("Getting voting list for quiz:", quiz_id.value);
+    
     const response = await getVotingListOfQuizzes(quiz_id.value);
     // Separate voting list based on end_time presence
     votingList.value = response.reduce(
@@ -482,7 +511,7 @@ const getVotingList = async () => {
       },
       { withEndTime: [], withoutEndTime: [] }
     );
-    console.log("Voting list:", votingList.value);
+
   } catch (error) {
     console.error("Error getting voting list:", error);
   }
@@ -493,7 +522,7 @@ const markAsEdited = (question) => {
 };
 
 const editQuestion = async (question) => {
-  console.log("Editing question:", question);
+  
   const data = {
     question_id: question.question_id.split("_")[1],
     question_text: question.question_text,
@@ -504,7 +533,7 @@ const editQuestion = async (question) => {
     const result = await updateQuestion(data);
     if (result) {
       question.isEdited = false; // Reset the edited status
-      console.log("Question updated successfully");
+      
     } else {
       console.error("Error updating question");
     }
@@ -519,7 +548,7 @@ const titleFontSize = computed(() => {
 });
 
 const showParticipationQR = (participation) => {
-  console.log("Showing QR for participation:", participation);
+  
   router.push({
     path: "/active-vote",
     query: { id: participation.participation_id, code: participation.code },
@@ -527,7 +556,7 @@ const showParticipationQR = (participation) => {
 };
 
 const showStats = (participation) => {
-  console.log("Showing stats for participation:", participation);
+  
   router.push({
     path: "/statistics",
     query: { participation_id: participation.participation_id },

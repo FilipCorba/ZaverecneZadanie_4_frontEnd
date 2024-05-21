@@ -39,7 +39,7 @@ const getStats = async () => {
     const result = await getStatistics(participation_id.value);
     if (result && Array.isArray(result.data)) {
       statistics.value = result.data;
-      console.log("Fetched statistics:", statistics.value); // Debugging
+      
     } else {
       console.error("Invalid data format received:", result);
     }

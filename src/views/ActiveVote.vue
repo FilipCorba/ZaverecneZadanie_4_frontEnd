@@ -13,7 +13,7 @@ import { useRoute } from "vue-router";
 import { generateQR } from "@api/qr_code";
 
 const route = useRoute();
-console.log("Route:", route.query);
+
 let participationId = ref(route.query.id);
 let code = ref(route.query.code); // Use route.query.code instead of router.query.code
 const image = ref("");
